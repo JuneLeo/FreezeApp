@@ -13,6 +13,36 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+
+        <LinearLayout
+            android:id="@+id/ll_operate"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:visibility="gone"
+                android:id="@+id/tv_operate2"
+                style="@style/TextView.Style"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:text="冻结" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_operate"
+                style="@style/TextView.Style"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:paddingLeft="10dp"
+                android:text="冻结" />
+
+        </LinearLayout>
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_image"
             android:layout_width="40dp"
@@ -26,23 +56,17 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_toLeftOf="@+id/ll_operate"
             android:layout_toRightOf="@+id/iv_image"
             android:text="" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_operate"
-            style="@style/TextView.Style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:text="冻结" />
+
     </RelativeLayout>
 
     <View
-        android:background="@color/colorDivider"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:background="@color/colorDivider" />
 
     <LinearLayout
 

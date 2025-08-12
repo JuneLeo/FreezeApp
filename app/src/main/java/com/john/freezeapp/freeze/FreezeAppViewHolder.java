@@ -1,6 +1,7 @@
 package com.john.freezeapp.freeze;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class FreezeAppViewHolder extends CardViewHolder<FreezeAppData> {
     public TextView tvName;
     public ImageView ivIcon;
     public TextView tvOperate;
+    public TextView tvOperate2;
     public LinearLayout llProcess;
     public ViewGroup appContainer;
 
@@ -35,6 +37,7 @@ public class FreezeAppViewHolder extends CardViewHolder<FreezeAppData> {
         ivIcon = itemView.findViewById(R.id.iv_image);
         tvName = itemView.findViewById(R.id.tv_name);
         tvOperate = itemView.findViewById(R.id.tv_operate);
+        tvOperate2 = itemView.findViewById(R.id.tv_operate2);
         llProcess = itemView.findViewById(R.id.process_info);
     }
 
@@ -46,15 +49,20 @@ public class FreezeAppViewHolder extends CardViewHolder<FreezeAppData> {
 
         AppInfoLoader.load(getContext(), data.appModel.packageName, ivIcon, tvName);
         tvOperate.setText(data.rightName);
-        tvOperate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Object listener = getAdapter().getListener();
-                if (listener instanceof FreezeAppAdapter.OnItemClick) {
-                    ((FreezeAppAdapter.OnItemClick) listener).onRightClick(data.appModel);
-                }
+        tvOperate.setOnClickListener(v -> {
+            if (data.onItemClick != null) {
+                data.onItemClick.onClick(data);
             }
         });
+
+        if (!TextUtils.isEmpty(data.right2Name)) {
+            tvOperate2.setOnClickListener(v -> {
+                if (data.onItemClick2 != null) {
+                    data.onItemClick2.onClick(data);
+                }
+            });
+            tvOperate2.setVisibility(View.VISIBLE);
+        }
 
         if (data.appModel instanceof FreezeAppManager.RunningModel) {
             appContainer.setOnClickListener(new View.OnClickListener() {

@@ -171,11 +171,7 @@ public class TrafficMonitor {
 
                 sNotifyCount++;
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(Daemon.getDaemon().getContext(), "trafficMonitor");
-                Intent intent = new Intent();
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                 IconCompat withBitmap = IconCompat.createWithBitmap(ImageUtils.bytesToBitmap(Base64.decode(ICON, Base64.NO_WRAP)));;
-
                 NotificationCompat.Builder notification = builder
                         .setContentTitle("流量监控")
                         .setContentText(String.format("%s流量使用超过阈值%s（%s次）", getNetworkText(request.template.getMatchRule()), CommonUtil.getSizeText(sThreshold), sNotifyCount))
@@ -188,7 +184,7 @@ public class TrafficMonitor {
                 if (DeviceUtil.atLeast33()) {
                     notification.setFullScreenIntent(ReplaceRef.<PendingIntent>unsafeCast(getPendingIntentActivity()), true);
                 }
-                notificationManager.enqueueNotificationWithTag(packageName, packageName, null, 123, notification.build(), 0);
+                notificationManager.enqueueNotificationWithTag(packageName, packageName, null, 33456, notification.build(), 0);
             }
         } catch (Exception e) {
             DaemonLog.e(e, "doTrafficMonitor");

@@ -8,10 +8,9 @@ import java.util.List;
 
 public class FreezeAppAdapter extends CardRecyclerViewAdapter<ClassCreatorPool> {
 
-    public FreezeAppAdapter(OnItemClick onItemClick) {
+    public FreezeAppAdapter() {
         getCreatorPool().putRule(FreezeAppData.class, FreezeAppViewHolder.CREATOR);
         setHasStableIds(true);
-        setListener(onItemClick);
     }
 
     @Override
@@ -32,5 +31,6 @@ public class FreezeAppAdapter extends CardRecyclerViewAdapter<ClassCreatorPool> 
 
     public interface OnItemClick {
         void onRightClick(FreezeAppManager.AppModel appModel);
+        void onRight2Click(FreezeAppManager.AppModel appModel);
     }
 }

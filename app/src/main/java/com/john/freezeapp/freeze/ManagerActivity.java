@@ -104,26 +104,11 @@ public class ManagerActivity extends ToolbarSearchActivity {
     private void initCommonAdapter() {
 
 
-        defrostAppAdapter = new FreezeAppAdapter(new FreezeAppAdapter.OnItemClick() {
-            @Override
-            public void onRightClick(FreezeAppManager.AppModel appModel) {
-                requestFreezeApp(appModel.packageName);
-            }
-        });
+        defrostAppAdapter = new FreezeAppAdapter();
 
-        freezeAppAdapter = new FreezeAppAdapter(new FreezeAppAdapter.OnItemClick() {
-            @Override
-            public void onRightClick(FreezeAppManager.AppModel appModel) {
-                requestDefrostApp(appModel.packageName);
-            }
-        });
+        freezeAppAdapter = new FreezeAppAdapter();
 
-        runningAdapter = new FreezeAppAdapter(new FreezeAppAdapter.OnItemClick() {
-            @Override
-            public void onRightClick(FreezeAppManager.AppModel appModel) {
-                requestForceStopApp(appModel.packageName);
-            }
-        });
+        runningAdapter = new FreezeAppAdapter();
 
         commonAdapters.add(runningAdapter);
         commonAdapters.add(defrostAppAdapter);
@@ -137,7 +122,12 @@ public class ManagerActivity extends ToolbarSearchActivity {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 hideLoading();
-                mDefrostAppLists = getFreezeApps(getResources().getString(R.string.manager_btn_freeze), list);
+                mDefrostAppLists = getFreezeApps(getResources().getString(R.string.manager_btn_freeze), list, new FreezeAppData.OnItemClick() {
+                    @Override
+                    public void onClick(FreezeAppData data) {
+                        requestFreezeApp(data.appModel.packageName);
+                    }
+                });
                 updateDefrostApp();
             }
 
@@ -183,7 +173,12 @@ public class ManagerActivity extends ToolbarSearchActivity {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 hideLoading();
-                mFreezeAppLists = getFreezeApps(getResources().getString(R.string.manager_btn_defrost), list);
+                mFreezeAppLists = getFreezeApps(getResources().getString(R.string.manager_btn_defrost), list, new FreezeAppData.OnItemClick() {
+                    @Override
+                    public void onClick(FreezeAppData data) {
+                        requestDefrostApp(data.appModel.packageName);
+                    }
+                });
                 updateFreezeApp();
             }
 
@@ -270,7 +265,19 @@ public class ManagerActivity extends ToolbarSearchActivity {
             public void success(List<FreezeAppManager.RunningModel> list) {
                 hideLoading();
                 List<FreezeAppData> uiList = runningAdapter.getItems();
-                mFreezeRunningAppLists = getFreezeRunningApp(getResources().getString(R.string.manager_btn_stop), list, uiList);
+                mFreezeRunningAppLists = getFreezeRunningApp(getResources().getString(R.string.manager_btn_stop), getResources().getString(R.string.manager_btn_freeze), list, uiList,new FreezeAppData.OnItemClick() {
+
+                    @Override
+                    public void onClick(FreezeAppData data) {
+                        requestForceStopApp(data.appModel.packageName);
+                    }
+                }, new FreezeAppData.OnItemClick() {
+                    @Override
+                    public void onClick(FreezeAppData data) {
+                        requestFreezeApp(data.appModel.packageName);
+
+                    }
+                });
                 updateFreezeRunningApp();
             }
 
@@ -332,19 +339,20 @@ public class ManagerActivity extends ToolbarSearchActivity {
         });
     }
 
-    public List<FreezeAppData> getFreezeApps(String operate, List<FreezeAppManager.AppModel> list) {
+    public List<FreezeAppData> getFreezeApps(String operate, List<FreezeAppManager.AppModel> list, FreezeAppData.OnItemClick onClick) {
         List<FreezeAppData> freezeAppDatas = new ArrayList<>();
         for (FreezeAppManager.AppModel appModel : list) {
             FreezeAppData uiModel = new FreezeAppData();
             uiModel.appModel = appModel;
             uiModel.rightName = operate;
+            uiModel.onItemClick = onClick;
             freezeAppDatas.add(uiModel);
         }
         return freezeAppDatas;
     }
 
 
-    public List<FreezeAppData> getFreezeRunningApp(String operate, List<FreezeAppManager.RunningModel> list, List<FreezeAppData> uiList) {
+    public List<FreezeAppData> getFreezeRunningApp(String operate, String operate2, List<FreezeAppManager.RunningModel> list, List<FreezeAppData> uiList, FreezeAppData.OnItemClick onClick, FreezeAppData.OnItemClick onClick2) {
         Map<String, FreezeAppData> tempMap = new HashMap<>();
 
         for (FreezeAppData commonUiModel : uiList) {
@@ -355,6 +363,9 @@ public class ManagerActivity extends ToolbarSearchActivity {
             FreezeAppData uiModel = new FreezeAppData();
             uiModel.appModel = appModel;
             uiModel.rightName = operate;
+            uiModel.right2Name = operate2;
+            uiModel.onItemClick = onClick;
+            uiModel.onItemClick2 = onClick2;
             if (tempMap.containsKey(appModel.packageName)) {
                 uiModel.isProcessExpand = tempMap.get(appModel.packageName).isProcessExpand;
             }

@@ -9,4 +9,13 @@ public class FreezeAppData {
     public boolean isProcessExpand = false;
     public LinearLayout cacheView;
     public String rightName = "";
+    public String right2Name = "";
+    public OnItemClick onItemClick;
+    public OnItemClick onItemClick2;
+
+
+
+    public interface OnItemClick {
+        void onClick(FreezeAppData data);
+    }
 }
