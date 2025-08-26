@@ -4,13 +4,17 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.ProcessHidden;
 
+import androidx.annotation.Keep;
+
 import com.john.freezeapp.daemon.DaemonLog;
 import com.john.freezeapp.daemon.fs.FileServerManager;
 import com.john.freezeapp.util.CommonConstant;
 
 import java.io.File;
 
+@Keep
 public class RunAs {
+
     public static void main(String[] args) {
 
         DaemonLog.log("RunAs 被启动了");
