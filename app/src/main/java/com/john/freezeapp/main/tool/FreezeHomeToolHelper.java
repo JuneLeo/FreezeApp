@@ -3,9 +3,11 @@ package com.john.freezeapp.main.tool;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.john.freezeapp.App;
 import com.john.freezeapp.BuildConfig;
 import com.john.freezeapp.CommandActivity;
 import com.john.freezeapp.R;
@@ -25,23 +27,33 @@ import com.john.freezeapp.main.tool.data.FreezeHomeToolSingleData;
 import com.john.freezeapp.hyper.MiMixFlipSettingActivity;
 import com.john.freezeapp.monitor.AppMonitorActivity;
 import com.john.freezeapp.storage.StorageActivity;
-import com.john.freezeapp.traffic.ClientTrafficMonitor;
 import com.john.freezeapp.traffic.TrafficMonitorActivity;
 import com.john.freezeapp.usagestats.UsageStatsActivity;
 import com.john.freezeapp.usagestats.appstandby.AppStandbyActivity;
 import com.john.freezeapp.util.DeviceUtil;
+import com.john.reflect.NativeFreeze;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 public class FreezeHomeToolHelper {
 
 
-    public static List<FreezeHomeToolData> getFreezeHomeFuncGroupData(Context context) {
+    public static List<FreezeHomeToolData> getFreezeHomeFuncGroupData(Context context, boolean isNeedDaemonActive) {
         List<FreezeHomeToolModel> freezeHomeToolModels = getFreezeHomeToolModels(context);
         Map<Integer, List<FreezeHomeToolModel>> map = new HashMap<>();
+
+        freezeHomeToolModels.removeIf(freezeHomeToolModel -> {
+            if (freezeHomeToolModel.isNeedDaemonActive) {
+                return !isNeedDaemonActive;
+            } else {
+                return false;
+            }
+        });
 
         for (FreezeHomeToolModel freezeHomeToolModel : freezeHomeToolModels) {
             List<FreezeHomeToolModel> modelList = map.computeIfAbsent(freezeHomeToolModel.group, k -> new ArrayList<>());
@@ -63,14 +75,18 @@ public class FreezeHomeToolHelper {
         return groupList;
     }
 
-    public static List<FreezeHomeToolData> getFreezeHomeFuncData(Context context) {
-        if (!ClientBinderManager.isActive()) {
-            return null;
-        }
+    public static List<FreezeHomeToolData> getFreezeHomeFuncData(Context context, boolean isNeedDaemonActive) {
         List<FreezeHomeToolModel> freezeHomeToolModels = getFreezeHomeToolModels(context);
         List<FreezeHomeToolData> singleDataList = new ArrayList<>();
         for (FreezeHomeToolModel freezeHomeToolModel : freezeHomeToolModels) {
-            singleDataList.add(FreezeHomeToolSingleData.transform(freezeHomeToolModel));
+            if (freezeHomeToolModel.isNeedDaemonActive) {
+                if (isNeedDaemonActive) {
+                    singleDataList.add(FreezeHomeToolSingleData.transform(freezeHomeToolModel));
+                }
+            } else {
+                singleDataList.add(FreezeHomeToolSingleData.transform(freezeHomeToolModel));
+            }
+
         }
 
         return singleDataList;
@@ -136,17 +152,19 @@ public class FreezeHomeToolHelper {
                     context.startActivity(intent);
                 }));
 
-        if (TextUtils.equals("Xiaomi MIX Flip", ClientBinderManager.getConfig(DaemonHelper.DAEMON_MODULE_SYSTEM_PROPERTIES, "ro.product.marketname"))) {
-            list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
-                    context.getResources().getString(R.string.main_mi_flip_setting),
-                    context.getResources().getString(R.string.main_mi_flip_setting_short_title),
-                    R.drawable.ic_vector_display,
-                    0xff9986A4,
-                    v -> {
-                        Intent intent = new Intent(context, MiMixFlipSettingActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }));
+        if (ClientBinderManager.isActive()) {
+            if (TextUtils.equals("Xiaomi MIX Flip", ClientBinderManager.getConfig(DaemonHelper.DAEMON_MODULE_SYSTEM_PROPERTIES, "ro.product.marketname"))) {
+                list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
+                        context.getResources().getString(R.string.main_mi_flip_setting),
+                        context.getResources().getString(R.string.main_mi_flip_setting_short_title),
+                        R.drawable.ic_vector_display,
+                        0xff9986A4,
+                        v -> {
+                            Intent intent = new Intent(context, MiMixFlipSettingActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(intent);
+                        }));
+            }
         }
 
 
@@ -239,6 +257,7 @@ public class FreezeHomeToolHelper {
                     context.getResources().getString(R.string.main_test),
                     R.drawable.ic_vector_window,
                     0xffD0ACA3,
+                    false,
                     v -> toTest(context)));
 
 
@@ -247,6 +266,7 @@ public class FreezeHomeToolHelper {
                     context.getResources().getString(R.string.main_test2),
                     R.drawable.ic_vector_window,
                     0xffD0ACA3,
+                    false,
                     v -> toTest2(context)));
 
             list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_OTHER,
@@ -254,6 +274,7 @@ public class FreezeHomeToolHelper {
                     context.getResources().getString(R.string.main_test3),
                     R.drawable.ic_vector_window,
                     0xffD0ACA3,
+                    false,
                     v -> toTest3(context)));
         }
 
@@ -271,7 +292,16 @@ public class FreezeHomeToolHelper {
      * @param context
      */
     private static void toTest2(Context context) {
-//        ClientTrafficMonitor.stop();
+        try {
+
+            Class<?> activityClass = Class.forName("dalvik.system.VMRuntime");
+            Method field = activityClass.getDeclaredMethod("setHiddenApiExemptions", String[].class);
+            field.setAccessible(true);
+
+            Log.i("FreezeReflect", "call success!!");
+        } catch (Throwable e) {
+            Log.e("FreezeReflect", "error:", e);
+        }
     }
 
 
@@ -281,6 +311,6 @@ public class FreezeHomeToolHelper {
      * @param context
      */
     private static void toTest(Context context) {
-//        ClientTrafficMonitor.start(1024 * 1024);
+        NativeFreeze.nativeInit(App.getApp().getApplicationInfo().targetSdkVersion);
     }
 }

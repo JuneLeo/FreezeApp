@@ -7,10 +7,10 @@ version = '1.0'
 
 android {
     namespace 'com.john.freezeapp.daemon'
-    compileSdk 34
+    compileSdk rootProject.ext.COMPILE_SDK_VERSION
 
     defaultConfig {
-        minSdk 24
+        minSdk rootProject.ext.MIN_SDK_VERSION
         consumerProguardFiles "consumer-rules.pro"
         buildConfigField 'String', 'DAEMON_VERSION', "\"${version}\""
         buildConfigField 'String', 'CLIENT_PACKAGE', '\"com.john.freezeapp\"'

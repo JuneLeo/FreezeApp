@@ -1,9 +1,4 @@
-package com.john.freezeapp.adb;
-
-import androidx.annotation.NonNull;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+package com.john.adb;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -20,7 +15,7 @@ public class AdbMessage {
     private byte[] data;
     public static final int HEADER_LENGTH = 24;
 
-    public AdbMessage(int command, int arg0, int arg1, int data_length, int data_crc32, int magic, @Nullable byte[] data) {
+    public AdbMessage(int command, int arg0, int arg1, int data_length, int data_crc32, int magic, byte[] data) {
         this.command = command;
         this.arg0 = arg0;
         this.arg1 = arg1;
@@ -30,13 +25,13 @@ public class AdbMessage {
         this.data = data;
     }
 
-    public AdbMessage(int command, int arg0, int arg1, @NotNull String data) {
+    public AdbMessage(int command, int arg0, int arg1, String data) {
         this(command, arg0, arg1, (data + '\u0000').getBytes(StandardCharsets.UTF_8));
     }
 
-    public AdbMessage(int command, int arg0, int arg1, @Nullable byte[] data) {
+    public AdbMessage(int command, int arg0, int arg1, byte[] data) {
 
-        this(command, arg0, arg1, data != null ? data.length : 0, crc32(data), (int)((long)command ^ 0xFFFFFFFFL), data);
+        this(command, arg0, arg1, data != null ? data.length : 0, crc32(data), (int) ((long) command ^ 0xFFFFFFFFL), data);
     }
 
     public final int getCommand() {
@@ -63,7 +58,6 @@ public class AdbMessage {
         return this.magic;
     }
 
-    @Nullable
     public final byte[] getData() {
         return this.data;
     }
@@ -105,7 +99,7 @@ public class AdbMessage {
 
 
     @Override
-    public boolean equals(@androidx.annotation.Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof AdbMessage)) return false;
 
@@ -136,7 +130,6 @@ public class AdbMessage {
         return result;
     }
 
-    @NonNull
     @Override
     public String toString() {
         return toStringShort();

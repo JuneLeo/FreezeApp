@@ -1,4 +1,4 @@
-package com.john.freezeapp.adb;
+package com.john.adb;
 
 public class AdbProtocol {
     public static final int A_SYNC = 0x434e5953;

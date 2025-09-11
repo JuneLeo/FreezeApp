@@ -1,15 +1,19 @@
 plugins {
     alias(libs.plugins.android.library)
-    id 'replace-plugin'
 }
 
 android {
-    namespace 'com.john.common'
+    namespace 'com.john.adb'
     compileSdk rootProject.ext.COMPILE_SDK_VERSION
 
     defaultConfig {
         minSdk rootProject.ext.MIN_SDK_VERSION
         consumerProguardFiles "consumer-rules.pro"
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=none'
+            }
+        }
     }
 
     buildTypes {
@@ -18,21 +22,30 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    buildFeatures {
-        buildConfig true
-        aidl true
-        prefab true
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        prefab true
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // 或者禁用所有警告
+        checkAllWarnings false
+    }
 }
 
 dependencies {
-
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.gson
+    implementation libs.bcpkix.jdk15on
+    implementation libs.boringssl
+    implementation libs.cxx
     compileOnly project(':hidden-api-stub')
 }

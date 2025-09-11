@@ -15,10 +15,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.john.adb.AdbInvalidPairingCodeException;
+import com.john.adb.AdbKey;
+import com.john.adb.AdbKeyException;
+import com.john.adb.AdbMdns;
+import com.john.adb.AdbPairingClient;
 import com.john.freezeapp.R;
 import com.john.freezeapp.client.ClientLog;
 import com.john.freezeapp.util.SharedPrefUtil;

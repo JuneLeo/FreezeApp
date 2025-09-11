@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.john.adb.AdbClient;
+import com.john.adb.AdbKey;
+import com.john.adb.AdbMdns;
 import com.john.freezeapp.client.ClientLog;
 import com.john.freezeapp.util.FreezeUtil;
 import com.john.freezeapp.util.SharedPrefUtil;

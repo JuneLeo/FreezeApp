@@ -1,10 +1,9 @@
 plugins {
     alias(libs.plugins.android.library)
-    id 'replace-plugin'
 }
 
 android {
-    namespace 'com.john.common'
+    namespace 'com.john.reflect'
     compileSdk rootProject.ext.COMPILE_SDK_VERSION
 
     defaultConfig {
@@ -18,21 +17,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    buildFeatures {
-        buildConfig true
-        aidl true
-        prefab true
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 }
 
 dependencies {
 
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.gson
-    compileOnly project(':hidden-api-stub')
 }

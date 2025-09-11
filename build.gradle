@@ -2,3 +2,9 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false
 }
+
+
+ext {
+    COMPILE_SDK_VERSION = 36
+    MIN_SDK_VERSION = 24
+}

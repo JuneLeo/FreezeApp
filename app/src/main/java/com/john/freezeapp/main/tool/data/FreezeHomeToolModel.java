@@ -20,14 +20,20 @@ public class FreezeHomeToolModel {
     public int icon;
     public int bgColor;
     public int group;
+    public boolean isNeedDaemonActive = true;
 
-    public FreezeHomeToolModel(int group, String title, String shortTitle, int icon, int bgColor, View.OnClickListener clickListener) {
+    public FreezeHomeToolModel(int group, String title, String shortTitle, int icon, int bgColor, boolean isNeedDaemonActive, View.OnClickListener clickListener) {
         this.group = group;
         this.clickListener = clickListener;
         this.bgColor = bgColor;
         this.icon = icon;
         this.title = title;
         this.shortTitle = shortTitle;
+        this.isNeedDaemonActive = isNeedDaemonActive;
+    }
+
+    public FreezeHomeToolModel(int group, String title, String shortTitle, int icon, int bgColor, View.OnClickListener clickListener) {
+        this(group, title, shortTitle, icon, bgColor, true, clickListener);
     }
 
     public static String getGroupName(int group) {

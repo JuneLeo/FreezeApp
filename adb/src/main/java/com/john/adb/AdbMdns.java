@@ -1,4 +1,4 @@
-package com.john.freezeapp.adb;
+package com.john.adb;
 
 import android.content.Context;
 import android.net.nsd.NsdManager;
@@ -151,7 +151,7 @@ public class AdbMdns {
     }
 
 
-    interface Callback {
+    public interface Callback {
         void callback(int port);
     }
 

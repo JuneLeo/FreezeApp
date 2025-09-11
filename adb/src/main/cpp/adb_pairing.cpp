@@ -223,7 +223,7 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
             {"nativeDestroy",     "(J)V",    (void *) PairingContext_Destroy},
     };
     // com/john/freezeapp/adb/PairingContext
-    env->RegisterNatives(env->FindClass("com/john/freezeapp/adb/PairingContext"), methods_PairingContext,
+    env->RegisterNatives(env->FindClass("com/john/adb/PairingContext"), methods_PairingContext,
                          sizeof(methods_PairingContext) / sizeof(JNINativeMethod));
 
     return JNI_VERSION_1_6;

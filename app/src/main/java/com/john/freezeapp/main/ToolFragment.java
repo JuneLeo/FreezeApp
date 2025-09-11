@@ -111,21 +111,19 @@ public class ToolFragment extends BaseFragment {
         }
 
         List<CardData> list = new ArrayList<>();
-        if (isDaemonActive()) {
-            boolean toolStyle = SharedPrefUtil.getBoolean(SharedPrefUtil.KEY_TOOL_STYLE, true);
-            if (toolStyle) {
-                List<FreezeHomeToolData> freezeHomeFuncData = FreezeHomeToolHelper.getFreezeHomeFuncGroupData(getContext());
-                if (freezeHomeFuncData != null) {
-                    list.addAll(freezeHomeFuncData);
-                }
-            } else {
-                List<FreezeHomeToolData> freezeHomeFuncData = FreezeHomeToolHelper.getFreezeHomeFuncData(getContext());
-                if (freezeHomeFuncData != null) {
-                    list.addAll(freezeHomeFuncData);
-                }
-            }
 
+        boolean toolStyle = SharedPrefUtil.getBoolean(SharedPrefUtil.KEY_TOOL_STYLE, true);
+        if (toolStyle) {
+            List<FreezeHomeToolData> freezeHomeFuncData = FreezeHomeToolHelper.getFreezeHomeFuncGroupData(getContext(), isDaemonActive());
+            list.addAll(freezeHomeFuncData);
         } else {
+            List<FreezeHomeToolData> freezeHomeFuncData = FreezeHomeToolHelper.getFreezeHomeFuncData(getContext(), isDaemonActive());
+            if (freezeHomeFuncData != null) {
+                list.addAll(freezeHomeFuncData);
+            }
+        }
+
+        if (list.isEmpty()) {
             CommonEmptyData commonEmptyData = new CommonEmptyData();
             commonEmptyData.type = CommonEmptyData.TYPE_NOT_BIND;
             commonEmptyData.content = getContext().getString(R.string.main_home_daemon_not_active_content);
@@ -133,8 +131,8 @@ public class ToolFragment extends BaseFragment {
             commonEmptyData.onClickListener = v -> switchHomeFragment();
             commonEmptyData.spanSize = FreezeHomeToolData.TOOL_SINGLE;
             list.add(commonEmptyData);
-
         }
+
         homeAdapter.updateData(list);
     }
 

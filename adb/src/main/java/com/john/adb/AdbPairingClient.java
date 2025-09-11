@@ -1,10 +1,8 @@
-package com.john.freezeapp.adb;
+package com.john.adb;
 
 import android.annotation.TargetApi;
-import android.util.Log;
 
 import com.android.org.conscrypt.Conscrypt;
-import com.john.freezeapp.client.ClientLog;
 
 import java.io.Closeable;
 import java.io.DataInputStream;
@@ -60,7 +58,7 @@ public class AdbPairingClient implements Closeable {
     }
 
 
-    boolean start() throws IOException, AdbInvalidPairingCodeException {
+    public boolean start() throws IOException, AdbInvalidPairingCodeException {
         try {
             setupTlsConnection();
         } catch (Exception e) {
@@ -93,7 +91,7 @@ public class AdbPairingClient implements Closeable {
         SSLContext sslContext = key.getSslContext();
         SSLSocket sslSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(socket, host, port, true);
         sslSocket.startHandshake();
-        ClientLog.log("Handshake succeeded.");
+        CommonLog.log("Handshake succeeded.");
 
         inputStream = new DataInputStream(sslSocket.getInputStream());
         outputStream = new DataOutputStream(sslSocket.getOutputStream());
@@ -129,7 +127,7 @@ public class AdbPairingClient implements Closeable {
 
         outputStream.write(buffer.array());
         outputStream.write(payload);
-        ClientLog.log("write payload, size=${payload.size}");
+        CommonLog.log("write payload, size=${payload.size}");
     }
 
     private boolean doExchangeMsgs() throws IOException {
@@ -179,11 +177,11 @@ public class AdbPairingClient implements Closeable {
         }
 
         if (decrypted.length != kMaxPeerInfoSize) {
-            ClientLog.error("Got size=${decrypted.size} PeerInfo.size=$kMaxPeerInfoSize");
+            CommonLog.error("Got size=${decrypted.size} PeerInfo.size=$kMaxPeerInfoSize");
             return false;
         }
         PeerInfo theirPeerInfo = PeerInfo.readFrom(ByteBuffer.wrap(decrypted));
-        ClientLog.log(theirPeerInfo.toString());
+        CommonLog.log(theirPeerInfo.toString());
         return true;
     }
 
@@ -244,7 +242,7 @@ public class AdbPairingClient implements Closeable {
             buffer.put(type);
             buffer.put(data);
 
-            ClientLog.log("write PeerInfo ${toStringShort()}");
+            CommonLog.log("write PeerInfo ${toStringShort()}");
         }
 
         @Override
@@ -290,7 +288,7 @@ public class AdbPairingClient implements Closeable {
             buffer.put(type);
             buffer.putInt(payload);
 
-            ClientLog.log("write PairingPacketHeader ${toStringShort()}");
+            CommonLog.log("write PairingPacketHeader ${toStringShort()}");
         }
 
         @Override
@@ -308,20 +306,20 @@ public class AdbPairingClient implements Closeable {
             int payload = buffer.getInt();
 
             if (version < kMinSupportedKeyHeaderVersion || version > kMaxSupportedKeyHeaderVersion) {
-                ClientLog.error("PairingPacketHeader version mismatch");
+                CommonLog.error("PairingPacketHeader version mismatch");
                 return null;
             }
             if (type != Type.SPAKE2_MSG.value && type != Type.PEER_INFO.value) {
-                ClientLog.error("Unknown PairingPacket type=${type}");
+                CommonLog.error("Unknown PairingPacket type=${type}");
                 return null;
             }
             if (payload <= 0 || payload > kMaxPayloadSize) {
-                ClientLog.error("header payload not within a safe payload size (size=${payload})");
+                CommonLog.error("header payload not within a safe payload size (size=${payload})");
                 return null;
             }
 
             PairingPacketHeader header = new PairingPacketHeader(version, type, payload);
-            ClientLog.log("read PairingPacketHeader ${header.toStringShort()}");
+            CommonLog.log("read PairingPacketHeader ${header.toStringShort()}");
             return header;
         }
     }

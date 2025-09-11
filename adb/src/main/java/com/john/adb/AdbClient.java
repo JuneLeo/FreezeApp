@@ -1,24 +1,20 @@
-package com.john.freezeapp.adb;
+package com.john.adb;
 
-import static com.john.freezeapp.adb.AdbProtocol.ADB_AUTH_RSAPUBLICKEY;
-import static com.john.freezeapp.adb.AdbProtocol.ADB_AUTH_SIGNATURE;
-import static com.john.freezeapp.adb.AdbProtocol.ADB_AUTH_TOKEN;
-import static com.john.freezeapp.adb.AdbProtocol.A_AUTH;
-import static com.john.freezeapp.adb.AdbProtocol.A_CLSE;
-import static com.john.freezeapp.adb.AdbProtocol.A_CNXN;
-import static com.john.freezeapp.adb.AdbProtocol.A_MAXDATA;
-import static com.john.freezeapp.adb.AdbProtocol.A_OKAY;
-import static com.john.freezeapp.adb.AdbProtocol.A_OPEN;
-import static com.john.freezeapp.adb.AdbProtocol.A_STLS;
-import static com.john.freezeapp.adb.AdbProtocol.A_STLS_VERSION;
-import static com.john.freezeapp.adb.AdbProtocol.A_VERSION;
-import static com.john.freezeapp.adb.AdbProtocol.A_WRTE;
+import static com.john.adb.AdbProtocol.ADB_AUTH_RSAPUBLICKEY;
+import static com.john.adb.AdbProtocol.ADB_AUTH_SIGNATURE;
+import static com.john.adb.AdbProtocol.ADB_AUTH_TOKEN;
+import static com.john.adb.AdbProtocol.A_AUTH;
+import static com.john.adb.AdbProtocol.A_CLSE;
+import static com.john.adb.AdbProtocol.A_CNXN;
+import static com.john.adb.AdbProtocol.A_MAXDATA;
+import static com.john.adb.AdbProtocol.A_OKAY;
+import static com.john.adb.AdbProtocol.A_OPEN;
+import static com.john.adb.AdbProtocol.A_STLS;
+import static com.john.adb.AdbProtocol.A_STLS_VERSION;
+import static com.john.adb.AdbProtocol.A_VERSION;
+import static com.john.adb.AdbProtocol.A_WRTE;
 
 import android.os.Build;
-import android.util.Log;
-
-import com.john.freezeapp.client.ClientLog;
-
 import java.io.Closeable;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,7 +36,7 @@ public class AdbClient implements Closeable {
         this.host = host;
         this.key = key;
         this.port = port;
-        ClientLog.log("AdbClient host =" + host + ", port = " + port);
+        CommonLog.log("AdbClient host =" + host + ", port = " + port);
     }
 
 
@@ -70,7 +66,7 @@ public class AdbClient implements Closeable {
         OutputStream outputStream = getOutputStream();
         outputStream.write(message.toByteArray());
         outputStream.flush();
-        ClientLog.log("write=" + message.toStringShort());
+        CommonLog.log("write=" + message.toStringShort());
     }
 
     private void write(int command, int arg0, int arg1, String data) throws IOException {
@@ -98,13 +94,13 @@ public class AdbClient implements Closeable {
         }
         AdbMessage message = new AdbMessage(command, arg0, arg1, dataLength, checksum, magic, data);
         message.validateOrThrow();
-        ClientLog.log( "read " + message.toStringShort());
+        CommonLog.log( "read " + message.toStringShort());
         return message;
     }
 
     public void connect() throws IOException, IllegalStateException {
 
-        ClientLog.log("AdbClient host =" + host + ", port = " + port);
+        CommonLog.log("AdbClient host =" + host + ", port = " + port);
         socket = new Socket(host, port);
         socket.setTcpNoDelay(true);
         plainInputStream = new DataInputStream(socket.getInputStream());
@@ -122,7 +118,7 @@ public class AdbClient implements Closeable {
             SSLContext sslContext = key.getSslContext();
             tlsSocket = (SSLSocket) sslContext.getSocketFactory().createSocket(socket, host, port, true);
             tlsSocket.startHandshake();
-            ClientLog.log( "Handshake succeeded.");
+            CommonLog.log( "Handshake succeeded.");
 
             tlsInputStream = new DataInputStream(tlsSocket.getInputStream());
             tlsOutputStream = new DataOutputStream(tlsSocket.getOutputStream());

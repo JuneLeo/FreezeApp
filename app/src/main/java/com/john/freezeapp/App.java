@@ -33,10 +33,10 @@ public class App extends Application {
         }
         AppMonitorManager.startAppMonitor(getApp());
         Clipboard.startClipboardFloating(getApp());
-        Thread.setDefaultUncaughtExceptionHandler((thread, e) -> {
-            Log.d("FreezeApp", e.getMessage());
-            Log.d("FreezeApp", e.getMessage());
-        });
+//        Thread.setDefaultUncaughtExceptionHandler((thread, e) -> {
+//            Log.d("FreezeApp", e.getMessage());
+//            Log.d("FreezeApp", e.getMessage());
+//        });
     }
 
     public static App getApp() {

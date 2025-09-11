@@ -5,19 +5,14 @@ plugins {
 
 android {
     namespace 'com.john.freezeapp'
-    compileSdk 34
+    compileSdk rootProject.ext.COMPILE_SDK_VERSION
 
     defaultConfig {
         applicationId "com.john.freezeapp"
-        minSdk 24
+        minSdk rootProject.ext.MIN_SDK_VERSION
         targetSdk 33
         versionCode 1
         versionName "1.0"
-        externalNativeBuild {
-            cmake {
-                arguments '-DANDROID_STL=none'
-            }
-        }
         ndk {
             abiFilters "arm64-v8a"
         }
@@ -58,12 +53,6 @@ android {
         checkAllWarnings false
     }
 
-    externalNativeBuild {
-        cmake {
-            path 'src/main/cpp/CMakeLists.txt'
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -79,14 +68,14 @@ dependencies {
     debugImplementation libs.shisuku.provider
     implementation libs.hiddenapibypass
     implementation libs.wheelpicker
-    implementation libs.bcpkix.jdk15on
-    implementation libs.boringssl
     implementation libs.cxx
     annotationProcessor project(':hidden-api-processor')
     compileOnly project(':hidden-api-stub')
     implementation project(':hidden-api-annotation')
     implementation project(':common')
     implementation project(':daemon')
+    implementation project(':adb')
+    implementation project(':reflect')
 }
 
 android.applicationVariants.all { variant ->

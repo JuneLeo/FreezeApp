@@ -32,3 +32,5 @@ project(':hidden-api-annotation').projectDir = new File(rootDir, 'hidden-api/hid
 includeBuild 'hidden-api/hidden-api-plugin'
 include ':daemon'
 include ':common'
+include ':adb'
+include ':reflect'

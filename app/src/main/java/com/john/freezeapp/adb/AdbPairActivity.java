@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -82,7 +81,7 @@ public class AdbPairActivity extends BaseActivity {
             ClientLog.error( "startForegroundService", e);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && e instanceof ForegroundServiceStartNotAllowedException) {
-                AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(Context.APP_OPS_SERVICE);
+                AppOpsManager appOpsManager = (AppOpsManager) context.getSystemService(APP_OPS_SERVICE);
                 int mode = appOpsManager.noteOpNoThrow("android:start_foreground", Process.myUid(), context.getPackageName(), null, null);
                 if (mode == AppOpsManager.MODE_ERRORED) {
                     Toast.makeText(this, "OP_START_FOREGROUND is denied. What are you doing?", Toast.LENGTH_LONG).show();
@@ -236,7 +235,7 @@ public class AdbPairActivity extends BaseActivity {
 
 
     private boolean isNotificationEnabled(Context context) {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
         NotificationChannel channel = notificationManager.getNotificationChannel(AdbPairService.notificationChannelId);
         return notificationManager.areNotificationsEnabled() &&
                 (channel == null || channel.getImportance() != NotificationManager.IMPORTANCE_NONE);
