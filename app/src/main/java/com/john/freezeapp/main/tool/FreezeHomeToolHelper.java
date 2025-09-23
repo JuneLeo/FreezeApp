@@ -2,8 +2,17 @@ package com.john.freezeapp.main.tool;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.hardware.display.DisplayManager;
+import android.hardware.display.IDisplayManager;
+import android.hardware.display.IVirtualDisplayCallback;
+import android.hardware.display.VirtualDisplay;
+import android.hardware.display.VirtualDisplayConfig;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.SurfaceView;
+import android.view.TextureView;
 
 import androidx.annotation.NonNull;
 
@@ -14,6 +23,8 @@ import com.john.freezeapp.R;
 import com.john.freezeapp.appops.AppOpsActivity;
 import com.john.freezeapp.battery.BatteryUsageActivity;
 import com.john.freezeapp.client.ClientBinderManager;
+import com.john.freezeapp.client.ClientDaemonService;
+import com.john.freezeapp.client.ClientSystemService;
 import com.john.freezeapp.clipboard.ClipboardActivity;
 import com.john.freezeapp.daemon.DaemonHelper;
 import com.john.freezeapp.deviceidle.DeviceIdleActivity;
@@ -31,6 +42,7 @@ import com.john.freezeapp.traffic.TrafficMonitorActivity;
 import com.john.freezeapp.usagestats.UsageStatsActivity;
 import com.john.freezeapp.usagestats.appstandby.AppStandbyActivity;
 import com.john.freezeapp.util.DeviceUtil;
+import com.john.freezeapp.util.PackageUtil;
 import com.john.reflect.NativeFreeze;
 
 import java.lang.reflect.Method;
@@ -311,6 +323,6 @@ public class FreezeHomeToolHelper {
      * @param context
      */
     private static void toTest(Context context) {
-        NativeFreeze.nativeInit(App.getApp().getApplicationInfo().targetSdkVersion);
+
     }
 }

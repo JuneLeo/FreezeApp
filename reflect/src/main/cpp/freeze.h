@@ -385,4 +385,6 @@ struct PartialRuntime34 {
     EnforcementPolicy hidden_api_policy_;
 };
 
+int unseal(JNIEnv *env, jint targetSdkVersion);
+
 #endif //FREEZEAPP_FREEZE_H

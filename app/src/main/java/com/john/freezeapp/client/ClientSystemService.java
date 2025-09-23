@@ -9,6 +9,7 @@ import android.app.usage.IUsageStatsManager;
 import android.content.Context;
 import android.content.IClipboard;
 import android.content.pm.IPackageManager;
+import android.hardware.display.IDisplayManager;
 import android.net.INetworkStatsService;
 import android.os.Build;
 import android.os.IBinder;
@@ -224,6 +225,26 @@ public class ClientSystemService {
         }
     };
 
+    private final static ClientBinderSingleton<IDisplayManager> iDisplayManager = new ClientBinderSingleton<IDisplayManager>() {
+        @Override
+        protected IDisplayManager createBinder() {
+            if (!isActive()) {
+                return null;
+            }
+
+            IBinder displayBinder = SystemServiceHelper.getSystemService(Context.DISPLAY_SERVICE);
+            if (displayBinder != null) {
+                return IDisplayManager.Stub.asInterface(new ClientSystemBinderWrapper(displayBinder));
+            }
+
+            return null;
+        }
+    };
+
+    public static IDisplayManager getDisplayManager() {
+        return iDisplayManager.get();
+    }
+
     public static INetworkStatsService getNetworkStatsService() {
         return iNetworkStatsService.get();
     }
@@ -282,4 +303,6 @@ public class ClientSystemService {
     public static IClipboard getiClipboard() {
         return iClipboard.get();
     }
+
+
 }

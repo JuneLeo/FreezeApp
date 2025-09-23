@@ -29,5 +29,5 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 find_library(log-lib log)
-add_library(freeze SHARED freeze.cpp)
+add_library(freeze SHARED freeze.cpp main.cpp)
 target_link_libraries(freeze ${log-lib})

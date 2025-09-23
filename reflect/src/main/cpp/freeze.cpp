@@ -107,10 +107,3 @@ int unseal(JNIEnv *env, jint targetSdkVersion) {
 
     return 0;
 }
-
-extern "C"
-JNIEXPORT void JNICALL
-Java_com_john_reflect_NativeFreeze_nativeInit(JNIEnv *env, jclass clazz, jint targetSdkVersion) {
-
-    unseal(env, targetSdkVersion);
-}
