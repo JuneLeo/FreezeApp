@@ -16,6 +16,14 @@
     <!--        android:name="android.permission.DUMP"-->
     <!--        tools:ignore="ProtectedPermissions" />-->
 
+
+    <instrumentation
+        android:label="FreezeApp"
+        android:name="com.john.freezeapp.ins.DebugInstrumentation"
+        android:targetPackage="com.autonavi.minimap"
+        android:handleProfiling="false"
+        android:functionalTest="false" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -28,6 +36,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="33">
+
+
 
         <activity
             android:name=".main.MainActivity"
