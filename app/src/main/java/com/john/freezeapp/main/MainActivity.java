@@ -149,7 +149,7 @@ public class MainActivity extends ToolbarActivity {
         if (!isDaemonActive()) {
             return;
         }
-        FreezeAppManager.requestAppList(getContext(), PackageUtil.TYPE_ALL, PackageUtil.STATUS_ALL, true, new FreezeAppManager.Callback() {
+        FreezeAppManager.requestAppList(getContext(), PackageUtil.TYPE_ALL, PackageUtil.STATUS_ALL, true, new FreezeAppManager.AppModelCallback() {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 ExecutorService executorService = ThreadPool.createExecutorService(4);

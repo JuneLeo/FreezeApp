@@ -122,6 +122,9 @@ public interface ITaskStackListener {
 
     void onTaskSnapshotChanged(int taskId, ActivityManagerHidden.TaskSnapshot snapshot);
 
+
+    void onRecentTaskRemovedForAddTask(int taskId);
+
     abstract class Stub extends Binder implements ITaskStackListener {
 
     }

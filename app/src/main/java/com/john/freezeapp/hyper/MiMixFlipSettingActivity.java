@@ -92,7 +92,7 @@ public class MiMixFlipSettingActivity extends ToolbarSearchActivity {
             Toast.makeText(MiMixFlipSettingActivity.this, "请手动强杀" + context.getString(R.string.app_name) + "~", Toast.LENGTH_SHORT).show();
             return;
         }
-        FreezeAppManager.requestForceStopApp(packageName, new FreezeAppManager.Callback2() {
+        FreezeAppManager.requestForceStopApp(packageName, new FreezeAppManager.ActionCallback() {
             @Override
             public void success() {
                 if (isDestroy()) {
@@ -174,7 +174,7 @@ public class MiMixFlipSettingActivity extends ToolbarSearchActivity {
 
     private void requestAllUserApp() {
         showLoading();
-        FreezeAppManager.requestAllUserApp(this, new FreezeAppManager.Callback() {
+        FreezeAppManager.requestAllUserApp(this, new FreezeAppManager.AppModelCallback() {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 requestUsageApp(list);
@@ -332,7 +332,7 @@ public class MiMixFlipSettingActivity extends ToolbarSearchActivity {
     }
 
     private void forceStopFlipApp(Context context) {
-        FreezeAppManager.requestForceStopApp("com.miui.fliphome", new FreezeAppManager.Callback2() {
+        FreezeAppManager.requestForceStopApp("com.miui.fliphome", new FreezeAppManager.ActionCallback() {
             @Override
             public void success() {
                 postUI(new Runnable() {

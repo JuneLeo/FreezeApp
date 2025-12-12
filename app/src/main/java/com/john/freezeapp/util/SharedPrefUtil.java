@@ -22,6 +22,8 @@ public class SharedPrefUtil {
     public static final String KEY_TRAFFIC_THRESHOLD = "key_traffic_threshold";
     public static final String KEY_TRAFFIC_SWITCHER = "key_traffic_switcher";
     public static final String KEY_TRAFFIC_TYPE = "key_traffic_match_rule";
+    public static final String KEY_MEMORY_MONITOR_SWITCH = "key_memory_monitor_switch";
+    public static final String KEY_MEMORY_MONITOR_PROCESS_NAME = "key_memory_monitor_process_name";
 
     public static SharedPreferences getSharedPref() {
         return App.getApp().getSharedPreferences(NAMESPACE, Context.MODE_PRIVATE);

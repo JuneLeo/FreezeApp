@@ -77,6 +77,19 @@ public class Daemon {
         mActivityThread = ActivityThread.systemMain();
         DaemonBinderManager.register(mActivityThread.getSystemContext());
         DaemonBinderManager.sendBinderContainer();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                CommonShellUtils.execCommand("am instrument -w com.john.freezeapp/com.john.freezeapp.ins.DebugInstrumentation ", false, new CommonShellUtils.ShellCommandResultCallback() {
+                    @Override
+                    public void callback(CommonShellUtils.ShellCommandResult commandResult) {
+                        DaemonLog.log("ShellCommandResult finish");
+                    }
+                });
+            }
+        }).start();
+
         printDaemon();
     }
 

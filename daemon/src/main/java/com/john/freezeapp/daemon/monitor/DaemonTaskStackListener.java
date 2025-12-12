@@ -151,4 +151,9 @@ public class DaemonTaskStackListener extends ITaskStackListener.Stub {
     public void onTaskSnapshotChanged(int taskId, ActivityManagerHidden.TaskSnapshot snapshot) {
 
     }
+
+    @Override
+    public void onRecentTaskRemovedForAddTask(int taskId) {
+
+    }
 }

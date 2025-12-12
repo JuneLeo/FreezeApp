@@ -27,6 +27,12 @@ android {
             keyAlias 'demo'
             keyPassword 'song123'
         }
+        debug {
+            storeFile file("/Users/juneleo/amap/amap_nextci/android/Test.keystore")
+            storePassword '123456'
+            keyAlias 'test'
+            keyPassword '123456'
+        }
     }
 
     buildTypes {
@@ -36,7 +42,7 @@ android {
             signingConfig signingConfigs.sky
         }
         debug {
-            signingConfig signingConfigs.sky
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -76,6 +82,7 @@ dependencies {
     implementation project(':daemon')
     implementation project(':adb')
     implementation project(':reflect')
+    implementation 'top.canyie.pine:core:0.3.0'
 }
 
 android.applicationVariants.all { variant ->

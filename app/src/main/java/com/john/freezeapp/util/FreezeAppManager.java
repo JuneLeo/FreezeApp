@@ -89,27 +89,27 @@ public class FreezeAppManager {
         }
     }
 
-    public interface Callback {
+    public interface AppModelCallback {
         void success(List<AppModel> list);
 
         void fail();
     }
 
 
-    public interface Callback2 {
+    public interface ActionCallback {
         void success();
 
         void fail();
     }
 
-    public interface Callback3 {
+    public interface RunningCallback {
         void success(List<RunningModel> list);
 
         void fail();
     }
 
 
-    public static void requestForceStopApp(String packageName, Callback2 callback) {
+    public static void requestForceStopApp(String packageName, ActionCallback callback) {
         ThreadPool.execute(() -> {
             try {
                 ClientSystemService.getActivityManager().forceStopPackage(packageName, 0);
@@ -126,7 +126,7 @@ public class FreezeAppManager {
     }
 
 
-    public static void requestDefrostApp(String packageName, Callback2 callback) {
+    public static void requestDefrostApp(String packageName, ActionCallback callback) {
         ThreadPool.execute(() -> {
             try {
                 ClientSystemService.getPackageManager().setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0, 0, "");
@@ -140,7 +140,7 @@ public class FreezeAppManager {
     }
 
 
-    public static void requestFreezeApp(String packageName, Callback2 callback) {
+    public static void requestFreezeApp(String packageName, ActionCallback callback) {
         ThreadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -155,19 +155,19 @@ public class FreezeAppManager {
         });
     }
 
-    public static void requestEnableApp(Context context, Callback callback) {
+    public static void requestEnableApp(Context context, AppModelCallback callback) {
         requestAppList(context, TYPE_NORMAL_APP, STATUS_ENABLE_APP, true, callback);
     }
 
-    public static void requestDisableApp(Context context, Callback callback) {
+    public static void requestDisableApp(Context context, AppModelCallback callback) {
         requestAppList(context, TYPE_NORMAL_APP, STATUS_DISABLE_APP, true, callback);
     }
 
-    public static void requestAllUserApp(Context context, Callback callback) {
+    public static void requestAllUserApp(Context context, AppModelCallback callback) {
         requestAppList(context, TYPE_NORMAL_APP, STATUS_ALL, false, callback);
     }
 
-    public static void requestAppList(Context context, @PackageUtil.TYPE int appType, @PackageUtil.STATUS int appStatus, boolean ignoreFreezeApp, Callback callback) {
+    public static void requestAppList(Context context, @PackageUtil.TYPE int appType, @PackageUtil.STATUS int appStatus, boolean ignoreFreezeApp, AppModelCallback callback) {
         ThreadPool.execute(() -> {
             List<AppModel> install = getInstallAppModel(appType, appStatus, ignoreFreezeApp);
             if (install != null) {
@@ -197,11 +197,11 @@ public class FreezeAppManager {
     }
 
 
-    public static void requestRunningApp(Context context, Callback3 callback) {
+    public static void requestRunningApp(Context context, RunningCallback callback) {
         requestRunningApp(context, false, callback);
     }
 
-    public static void requestRunningApp(Context context, boolean force, Callback3 callback) {
+    public static void requestRunningApp(Context context, boolean force, RunningCallback callback) {
         if (force) {
             sAllAppMap.clear();
         }
@@ -209,7 +209,7 @@ public class FreezeAppManager {
             requestRunningProcess2(context, callback);
         } else {
 
-            requestAppList(context, TYPE_NORMAL_APP, STATUS_ENABLE_APP, true, new Callback() {
+            requestAppList(context, TYPE_NORMAL_APP, STATUS_ENABLE_APP, true, new AppModelCallback() {
                 @Override
                 public void success(List<AppModel> list) {
                     sAllAppMap.clear();
@@ -227,7 +227,7 @@ public class FreezeAppManager {
         }
     }
 
-    private static void requestRunningProcess2(Context context, Callback3 callback) {
+    private static void requestRunningProcess2(Context context, RunningCallback callback) {
         ThreadPool.execute(() -> {
             try {
                 List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = ClientSystemService.getActivityManager().getRunningAppProcesses();
@@ -235,7 +235,7 @@ public class FreezeAppManager {
                 for (ActivityManager.RunningAppProcessInfo runningAppProcess : runningAppProcesses) {
                     ProcessModel processModel = new ProcessModel();
                     processModel.processName = runningAppProcess.processName;
-                    processModel.time = runningAppProcess.pid + "";
+                    processModel.pid = runningAppProcess.pid + "";
                     for (String packageName : runningAppProcess.pkgList) {
                         if (!TextUtils.equals(packageName, BuildConfig.APPLICATION_ID)) {
                             AppModel appModel = sAllAppMap.get(packageName);
@@ -245,6 +245,7 @@ public class FreezeAppManager {
                                     runningModel = new RunningModel(appModel);
                                     runningModelMap.put(packageName, runningModel);
                                 }
+                                processModel.packageName = appModel.packageName;
                                 runningModel.addProcess(processModel);
                             }
                         }

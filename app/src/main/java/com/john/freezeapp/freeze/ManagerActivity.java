@@ -118,7 +118,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestEnableApp() {
         showLoading();
-        FreezeAppManager.requestEnableApp(this, new FreezeAppManager.Callback() {
+        FreezeAppManager.requestEnableApp(this, new FreezeAppManager.AppModelCallback() {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 hideLoading();
@@ -169,7 +169,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestDisableApp() {
         showLoading();
-        FreezeAppManager.requestDisableApp(this, new FreezeAppManager.Callback() {
+        FreezeAppManager.requestDisableApp(this, new FreezeAppManager.AppModelCallback() {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 hideLoading();
@@ -225,7 +225,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestFreezeApp(String packageName) {
         showLoading();
-        FreezeAppManager.requestFreezeApp(packageName, new FreezeAppManager.Callback2() {
+        FreezeAppManager.requestFreezeApp(packageName, new FreezeAppManager.ActionCallback() {
             @Override
             public void success() {
                 hideLoading();
@@ -243,7 +243,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestDefrostApp(String packageName) {
         showLoading();
-        FreezeAppManager.requestDefrostApp(packageName, new FreezeAppManager.Callback2() {
+        FreezeAppManager.requestDefrostApp(packageName, new FreezeAppManager.ActionCallback() {
             @Override
             public void success() {
                 hideLoading();
@@ -260,7 +260,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestRunningApp() {
         showLoading();
-        FreezeAppManager.requestRunningApp(this, new FreezeAppManager.Callback3() {
+        FreezeAppManager.requestRunningApp(this, new FreezeAppManager.RunningCallback() {
             @Override
             public void success(List<FreezeAppManager.RunningModel> list) {
                 hideLoading();
@@ -320,7 +320,7 @@ public class ManagerActivity extends ToolbarSearchActivity {
 
     private void requestForceStopApp(String packageName) {
         showLoading();
-        FreezeAppManager.requestForceStopApp(packageName, new FreezeAppManager.Callback2() {
+        FreezeAppManager.requestForceStopApp(packageName, new FreezeAppManager.ActionCallback() {
             @Override
             public void success() {
                 runOnUiThread(new Runnable() {

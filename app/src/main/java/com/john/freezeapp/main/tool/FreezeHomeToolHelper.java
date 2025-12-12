@@ -36,6 +36,7 @@ import com.john.freezeapp.main.tool.data.FreezeHomeToolItemData;
 import com.john.freezeapp.main.tool.data.FreezeHomeToolModel;
 import com.john.freezeapp.main.tool.data.FreezeHomeToolSingleData;
 import com.john.freezeapp.hyper.MiMixFlipSettingActivity;
+import com.john.freezeapp.memory.AppMemoryActivity;
 import com.john.freezeapp.monitor.AppMonitorActivity;
 import com.john.freezeapp.storage.StorageActivity;
 import com.john.freezeapp.traffic.TrafficMonitorActivity;
@@ -258,6 +259,18 @@ public class FreezeHomeToolHelper {
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, TrafficMonitorActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }));
+
+
+        list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
+                context.getResources().getString(R.string.main_app_memory_monitor),
+                context.getResources().getString(R.string.main_app_memory_monitor_short_title),
+                R.drawable.ic_vector_white_terminal,
+                0xffF4E1B9,
+                v -> {
+                    Intent intent = new Intent(context, AppMemoryActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }));

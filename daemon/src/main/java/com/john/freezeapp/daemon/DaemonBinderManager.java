@@ -26,6 +26,12 @@ import java.util.List;
 public class DaemonBinderManager {
 
     private static final IDaemonBinder sBinderContainer = new DaemonBinderStub();
+
+
+    public static IDaemonBinder getBinderContainer() {
+        return sBinderContainer;
+    }
+
     private static final IProcessObserver.Stub iProcessObserverStub = new IProcessObserver.Stub() {
 
         private final List<Integer> PID_LIST = new ArrayList<>();

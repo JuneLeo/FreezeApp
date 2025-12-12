@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,26 +15,22 @@ import android.widget.Toast;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import top.canyie.pine.Pine;
+import top.canyie.pine.PineConfig;
+import top.canyie.pine.callback.MethodHook;
+
 public class DebugInstrumentation extends Instrumentation {
 
-    public static final String TAG = "songpengfei";
+    public static final String TAG = "DebugInstrumentation";
 
     Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     public Application newApplication(ClassLoader cl, String className, Context context) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Log.d("songpengfei", "newApplication - " + Log.getStackTraceString(new Throwable()));
+        Log.d(TAG, "newApplication - " + Log.getStackTraceString(new Throwable()));
         installMultidex();
-        // 在主线程中启动 Activity
-
-        Log.d(TAG, "class = " + className + ", classloader=" + cl.getClass().getName());
-        try {
-            Class clz = cl.loadClass("androidx/lifecycle/ProcessLifecycleOwner");
-            Log.d(TAG, "class = " + className + ", classloader=" + cl.getClass().getName());
-        } catch (Exception e) {
-            Log.d(TAG, e.getMessage());
-        }
-
+        PineConfig.debug = true;
+        PineConfig.debuggable = true;
         return super.newApplication(cl, className, context);
     }
 
@@ -43,23 +38,31 @@ public class DebugInstrumentation extends Instrumentation {
     @Override
     public void onCreate(Bundle arguments) {
         super.onCreate(arguments);
-        Log.d("songpengfei", "DebugInstrumentation started");
+        Log.d(TAG, "onCreate");
+        try {
+            Pine.hook(Class.forName("com.autonavi.bundle.vui.util.CloudController").getDeclaredMethod("isLLMLogic"), new MethodHook() {
+                @Override
+                public void afterCall(Pine.CallFrame callFrame) throws Throwable {
+                    callFrame.setResult(true);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.d(TAG, e.getMessage());
+        }
     }
 
     @Override
     public void callActivityOnCreate(Activity activity, Bundle icicle) {
         super.callActivityOnCreate(activity, icicle);
-
-
+        Log.d(TAG, "callActivityOnCreate");
     }
 
 
     @Override
     public void callActivityOnResume(Activity activity) {
         super.callActivityOnResume(activity);
-        Log.d("songpengfei", "callActivityOnResume - " + Log.getStackTraceString(new Throwable()));
-
-
+        Log.d(TAG, "callActivityOnResume - " + Log.getStackTraceString(new Throwable()));
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -85,16 +88,7 @@ public class DebugInstrumentation extends Instrumentation {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-
-        Log.d("songpengfei", "onDestroy - " + Log.getStackTraceString(new Throwable()));
-
-
-    }
-
-    @Override
-    public void finish(int resultCode, Bundle results) {
-        Log.d("songpengfei", "finish - " + Log.getStackTraceString(new Throwable()));
+        Log.d(TAG, "onDestroy - " + Log.getStackTraceString(new Throwable()));
     }
 
 

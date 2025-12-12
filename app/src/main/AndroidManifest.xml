@@ -24,6 +24,13 @@
         android:handleProfiling="false"
         android:functionalTest="false" />
 
+    <instrumentation
+        android:label="FreezeApp"
+        android:name="com.john.freezeapp.ins.MemoryInstrumentation"
+        android:targetPackage="com.john.freezeapp"
+        android:handleProfiling="false"
+        android:functionalTest="false" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -179,9 +186,15 @@
             android:name=".traffic.TrafficRecordActivity"
             android:launchMode="singleTask" />
 
+        <activity
+            android:name=".memory.AppMemoryActivity"
+            android:launchMode="singleTask" />
+
         <service android:name=".monitor.AppMonitorService" />
 
         <service android:name=".clipboard.ClipboardService" />
+
+        <service android:name=".memory.AppMemoryService" />
 
         <service
             android:name="com.john.freezeapp.adb.AdbPairService"

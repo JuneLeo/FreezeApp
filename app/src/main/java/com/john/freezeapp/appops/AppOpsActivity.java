@@ -47,7 +47,7 @@ public class AppOpsActivity extends ToolbarSearchActivity {
 
     private void requestInstallApp() {
         showLoading();
-        FreezeAppManager.requestAppList(this, PackageUtil.TYPE_NORMAL_APP, PackageUtil.STATUS_ALL, false, new FreezeAppManager.Callback() {
+        FreezeAppManager.requestAppList(this, PackageUtil.TYPE_NORMAL_APP, PackageUtil.STATUS_ALL, false, new FreezeAppManager.AppModelCallback() {
             @Override
             public void success(List<FreezeAppManager.AppModel> list) {
                 hideLoading();

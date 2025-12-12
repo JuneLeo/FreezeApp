@@ -84,7 +84,7 @@ public class FreezeAppViewHolder extends CardViewHolder<FreezeAppData> {
                     TextView processName = processView.findViewById(R.id.tv_process_name);
                     TextView processTime = processView.findViewById(R.id.tv_process_time);
                     processName.setText(processModel.processName);
-                    processTime.setText("PID - " + processModel.time);
+                    processTime.setText("PID - " + processModel.pid);
                     linearLayout.addView(processView);
                 }
                 data.cacheView = linearLayout;
