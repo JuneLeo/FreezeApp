@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL  "
+            android:textSize="16dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_url"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tip_background"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MODEL  "
+            android:textSize="16dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_model"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tip_background"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="APIKEY  "
+            android:textSize="16dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_apikey"
+            android:layout_width="0dp"
+            android:inputType="textPassword"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tip_background"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14dp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="QUERY  "
+            android:textSize="16dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_query"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/tip_background"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:textSize="14dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/btn_background"
+            android:text="@string/command_btn_execute"
+            android:textColor="@color/homeButtonColor"
+            app:cornerRadius="300dp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="执行状态: " />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_close"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_background"
+        android:text="@string/manager_btn_stop"
+        android:textColor="@color/homeButtonColor"
+        app:cornerRadius="300dp" />
+</LinearLayout>

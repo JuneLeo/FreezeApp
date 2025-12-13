@@ -14,3 +14,4 @@
 * APP外屏配置（小米 MIX FLIP）
 * APP文件服务器(支持根目录和App内置沙盒目录)
 * APP流量监控（Daemon进程监控移动数据流量超出设置的阈值）
+* APP AutoGLM从python移植

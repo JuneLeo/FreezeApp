@@ -34,6 +34,46 @@ android {
     }
 }
 
+
+/**
+ *  <!-- Retrofit for HTTP client -->
+ <dependency>
+ <groupId>com.squareup.retrofit2</groupId>
+ <artifactId>retrofit</artifactId>
+ <version>2.9.0</version>
+ </dependency>
+
+ <!-- RxJava2 for Retrofit -->
+ <dependency>
+ <groupId>com.squareup.retrofit2</groupId>
+ <artifactId>adapter-rxjava2</artifactId>
+ <version>2.9.0</version>
+ </dependency>
+
+ <!-- Jackson for JSON -->
+ <dependency>
+ <groupId>com.squareup.retrofit2</groupId>
+ <artifactId>converter-jackson</artifactId>
+ <version>2.9.0</version>
+ </dependency>
+
+ <!-- Jackson core (explicit dependency) -->
+ <dependency>
+ <groupId>com.fasterxml.jackson.core</groupId>
+ <artifactId>jackson-databind</artifactId>
+ <version>2.15.2</version>
+ </dependency>
+
+ <!-- OkHttp (required by Retrofit) -->
+ <dependency>
+ <groupId>com.squareup.okhttp3</groupId>
+ <artifactId>okhttp</artifactId>
+ <version>4.12.0</version>
+ </dependency>
+
+ implementation 'com.theokanning.openai-gpt3-java:service:0.18.2'
+ */
+
 dependencies {
     implementation libs.gson
     implementation libs.annotation
@@ -43,6 +83,7 @@ dependencies {
     compileOnly project(':hidden-api-stub')
     implementation project(':hidden-api-annotation')
     implementation project(':common')
-
-
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
 }

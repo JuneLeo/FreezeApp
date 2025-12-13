@@ -27,12 +27,6 @@ android {
             keyAlias 'demo'
             keyPassword 'song123'
         }
-        debug {
-            storeFile file("/Users/juneleo/amap/amap_nextci/android/Test.keystore")
-            storePassword '123456'
-            keyAlias 'test'
-            keyPassword '123456'
-        }
     }
 
     buildTypes {
@@ -42,7 +36,7 @@ android {
             signingConfig signingConfigs.sky
         }
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.sky
         }
     }
 

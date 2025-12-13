@@ -23,6 +23,8 @@ public class DaemonHelper {
     public static final String DAEMON_BINDER_RUN_AS = "daemon_binder_run_as";
     public static final String DAEMON_BINDER_TRAFFIC_MONITOR = "daemon_binder_traffic_monitor";
 
+    public static final String DAEMON_BINDER_AUTO_GLM = "daemon_binder_auto_glm";
+
 
     public static final String DAEMON_CLIPBOARD_PATH = "/sdcard/Android/.freezeapp/clipboard_data.xml";
     public static final String DAEMON_CONFIG_PATH = "/sdcard/Android/.freezeapp/config.xml";

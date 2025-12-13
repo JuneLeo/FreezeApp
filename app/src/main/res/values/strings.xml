@@ -20,6 +20,7 @@
     <string name="app_file_server">App File Server</string>
     <string name="app_traffic_monitor">Traffic Monitor</string>
     <string name="app_memory_name">App Memory</string>
+    <string name="app_auto_glm_name">AutoGLM</string>
 
     <string name="main_app_server_active">Freeze服务正在运行</string>
     <string name="main_app_server_not_active">Freeze服务未启动</string>
@@ -54,6 +55,9 @@
 
     <string name="main_app_memory_monitor">APP内存监控</string>
     <string name="main_app_memory_monitor_short_title">内存监控</string>
+
+    <string name="main_app_auto_glm">AutoGLM</string>
+    <string name="main_app_auto_glm_short_title">AutoGLM</string>
 
     <string name="main_adb_start_server_title">adb启动（连接电脑启动）</string>
     <string name="main_adb_start_server_content">没有root的设备需要借助adb来启动Freeze服务（需要连接电脑）。这个过程每次设备重新启动后需要重新进行。</string>

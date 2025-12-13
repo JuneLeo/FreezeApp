@@ -21,6 +21,7 @@ import com.john.freezeapp.BuildConfig;
 import com.john.freezeapp.CommandActivity;
 import com.john.freezeapp.R;
 import com.john.freezeapp.appops.AppOpsActivity;
+import com.john.freezeapp.autoglm.AutoGLMActivity;
 import com.john.freezeapp.battery.BatteryUsageActivity;
 import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.client.ClientDaemonService;
@@ -271,6 +272,18 @@ public class FreezeHomeToolHelper {
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, AppMemoryActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }));
+
+
+        list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
+                context.getResources().getString(R.string.main_app_auto_glm),
+                context.getResources().getString(R.string.main_app_auto_glm_short_title),
+                R.drawable.ic_vector_white_terminal,
+                0xffF4E1B9,
+                v -> {
+                    Intent intent = new Intent(context, AutoGLMActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }));

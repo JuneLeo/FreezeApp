@@ -11,4 +11,9 @@ public class ClientLogBinderStub extends IClientLogBinder.Stub {
     public void log(String msg) throws RemoteException {
         ClientLogBinderManager.notifyLog( msg);
     }
+
+    @Override
+    public void toast(String msg) throws RemoteException {
+
+    }
 }

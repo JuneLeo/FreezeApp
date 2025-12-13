@@ -5,4 +5,5 @@ package com.john.freezeapp;
 
 interface IClientLogBinder {
     void log(String msg);
+    void toast(String msg);
 }

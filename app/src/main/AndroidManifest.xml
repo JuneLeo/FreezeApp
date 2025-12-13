@@ -18,18 +18,18 @@
 
 
     <instrumentation
-        android:label="FreezeApp"
         android:name="com.john.freezeapp.ins.DebugInstrumentation"
-        android:targetPackage="com.autonavi.minimap"
+        android:functionalTest="false"
         android:handleProfiling="false"
-        android:functionalTest="false" />
+        android:label="FreezeApp"
+        android:targetPackage="com.autonavi.minimap" />
 
     <instrumentation
-        android:label="FreezeApp"
         android:name="com.john.freezeapp.ins.MemoryInstrumentation"
-        android:targetPackage="com.john.freezeapp"
+        android:functionalTest="false"
         android:handleProfiling="false"
-        android:functionalTest="false" />
+        android:label="FreezeApp"
+        android:targetPackage="com.john.freezeapp" />
 
     <application
         android:name=".App"
@@ -43,7 +43,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="33">
-
 
 
         <activity
@@ -190,6 +189,10 @@
             android:name=".memory.AppMemoryActivity"
             android:launchMode="singleTask" />
 
+        <activity
+            android:name=".autoglm.AutoGLMActivity"
+            android:launchMode="singleTask" />
+
         <service android:name=".monitor.AppMonitorService" />
 
         <service android:name=".clipboard.ClipboardService" />
@@ -201,6 +204,7 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="connectedDevice" />
+        <service android:name=".autoglm.AutoGLMService" />
 
         <provider
             android:name=".client.ClientProvider"
