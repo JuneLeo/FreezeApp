@@ -17,6 +17,7 @@ import com.john.freezeapp.IRemoteProcess;
 import com.john.freezeapp.daemon.autoglm.AutoGLMBinder;
 import com.john.freezeapp.daemon.clipboard.DaemonClipboardMonitorBinder;
 import com.john.freezeapp.daemon.fs.DaemonFileServerBinder;
+import com.john.freezeapp.daemon.memory.MemoryMonitorBinder;
 import com.john.freezeapp.daemon.monitor.DaemonAppMonitorBinderStub;
 import com.john.freezeapp.daemon.process.RemoteProcess;
 import com.john.freezeapp.daemon.runas.DaemonRunAsBinder;
@@ -45,6 +46,7 @@ public class DaemonBinderStub extends IDaemonBinder.Stub {
         sDaemonBinderMap.put(DaemonHelper.DAEMON_BINDER_RUN_AS, new DaemonRunAsBinder());
         sDaemonBinderMap.put(DaemonHelper.DAEMON_BINDER_TRAFFIC_MONITOR, new DaemonTrafficBinder());
         sDaemonBinderMap.put(DaemonHelper.DAEMON_BINDER_AUTO_GLM, new AutoGLMBinder());
+        sDaemonBinderMap.put(DaemonHelper.DAEMON_BINDER_MEMORY_MONITOR, new MemoryMonitorBinder());
     }
 
     @Override

@@ -2,8 +2,14 @@ package com.john.freezeapp.memory;
 
 import android.os.Debug;
 import android.os.DebugHidden;
+import android.os.IBinder;
+import android.os.RemoteException;
 
+import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.client.ClientSystemService;
+import com.john.freezeapp.daemon.DaemonHelper;
+import com.john.freezeapp.daemon.memory.IMemoryMonitorBinder;
+import com.john.freezeapp.daemon.memory.MemoryData;
 import com.john.freezeapp.util.SharedPrefUtil;
 import com.john.hidden.api.ReplaceRef;
 
@@ -282,7 +288,7 @@ public class AppMemoryManager {
      * : 19K
      */
 
-    public static AppMemoryInfo getAppMemoryModel(int pid) {
+    public static MemoryData getAppMemoryModel(int pid) {
         Debug.MemoryInfo[] memoryInfos = ClientSystemService.getActivityManager().getProcessMemoryInfo(new int[]{pid});
         if (memoryInfos == null || memoryInfos.length == 0) {
             return null;
@@ -320,7 +326,7 @@ public class AppMemoryManager {
          *      *                     "TOTAL SWAP (KB):", memInfo.getSummaryTotalSwap());
          *      *         }
          */
-        AppMemoryInfo model = new AppMemoryInfo();
+        MemoryData model = new MemoryData();
         model.mJavaHeapPssSize = memInfo.getSummaryJavaHeap(); // Java Heap
         model.mNativeHeapPssSize = memInfo.getSummaryNativeHeap(); //Native Heap
         model.mCodePssSize = memInfo.getSummaryCode(); //Code
@@ -350,6 +356,19 @@ public class AppMemoryManager {
 
     public static void setProcessName(String processName) {
         SharedPrefUtil.setString(SharedPrefUtil.KEY_MEMORY_MONITOR_PROCESS_NAME, processName);
+    }
+
+
+    public static IMemoryMonitorBinder getMemoryMonitorBinder() {
+        try {
+            IBinder service = ClientBinderManager.getDaemonBinder().getService(DaemonHelper.DAEMON_BINDER_MEMORY_MONITOR);
+            if (service != null) {
+                return IMemoryMonitorBinder.Stub.asInterface(service);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

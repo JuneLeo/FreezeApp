@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import com.john.freezeapp.App;
 import com.john.freezeapp.R;
 import com.john.freezeapp.util.DeviceUtil;
+import com.john.freezeapp.util.FreezeUtil;
 import com.john.freezeapp.util.ScreenUtils;
 import com.john.freezeapp.daemon.util.UIExecutor;
 import com.john.freezeapp.window.FloatWindow;
@@ -178,6 +179,9 @@ public class AppMonitorService extends Service {
     }
 
     public static void startAppMonitor(Context context) {
+        if (!FreezeUtil.isOverlayPermission(context)) {
+            FreezeUtil.allowSystemAlertWindow();
+        }
         Intent intent = new Intent(context, AppMonitorService.class);
         intent.setAction(ACTION_START_APP_MONITOR);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

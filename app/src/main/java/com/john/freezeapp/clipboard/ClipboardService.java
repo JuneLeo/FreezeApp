@@ -133,6 +133,9 @@ public class ClipboardService extends Service {
     }
 
     public static void startClipboardFloating(Context context) {
+        if (!FreezeUtil.isOverlayPermission(context)) {
+            FreezeUtil.allowSystemAlertWindow();
+        }
         Intent intent = new Intent(context, ClipboardService.class);
         intent.setAction(ACTION_START_CLIPBOARD_FLOATING);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

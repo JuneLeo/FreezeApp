@@ -23,6 +23,7 @@ import com.john.freezeapp.clipboard.ClipboardActivity;
 import com.john.freezeapp.daemon.autoglm.IAutoGLMBinder;
 import com.john.freezeapp.daemon.autoglm.IAutoGLMListener;
 import com.john.freezeapp.util.DeviceUtil;
+import com.john.freezeapp.util.FreezeUtil;
 import com.john.freezeapp.util.ScreenUtils;
 import com.john.freezeapp.window.FloatWindow;
 
@@ -172,6 +173,11 @@ public class AutoGLMService extends Service {
     }
 
     public static void start(Context context) {
+
+        if (!FreezeUtil.isOverlayPermission(context)) {
+            FreezeUtil.allowSystemAlertWindow();
+        }
+
         Intent intent = new Intent(context, AutoGLMService.class);
         intent.setAction(ACTION_START_AUTO_GLM_MONITOR);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

@@ -12,14 +12,23 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.Gravity;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.john.freezeapp.R;
+import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.clipboard.ClipboardActivity;
+import com.john.freezeapp.daemon.DaemonBinderManager;
+import com.john.freezeapp.daemon.DaemonHelper;
+import com.john.freezeapp.daemon.autoglm.IAutoGLMBinder;
+import com.john.freezeapp.daemon.memory.IMemoryMonitorBinder;
+import com.john.freezeapp.daemon.memory.IMemoryMonitorListener;
+import com.john.freezeapp.daemon.memory.MemoryData;
 import com.john.freezeapp.util.DeviceUtil;
+import com.john.freezeapp.util.FreezeUtil;
 import com.john.freezeapp.util.ScreenUtils;
 import com.john.freezeapp.util.SharedPrefUtil;
 import com.john.freezeapp.window.FloatWindow;
@@ -47,7 +56,7 @@ public class AppMemoryService extends Service {
             createNotificationChannel(getApplicationContext());
         }
         showNotification(getApplicationContext());
-
+        startMemoryMonitorListener();
     }
 
 
@@ -67,7 +76,9 @@ public class AppMemoryService extends Service {
     public void onDestroy() {
         super.onDestroy();
         hideWindow();
+        stopMemoryMonitorListener();
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -81,9 +92,9 @@ public class AppMemoryService extends Service {
         switch (action) {
             case ACTION_START_MEMORY_MONITOR_FLOATING:
             case ACTION_RESTART_MEMORY_MONITOR_FLOATING: {
-                mPid = intent.getIntExtra(EXTRA_MEMORY_MONITOR_PID, 0);
-                mPackageName = intent.getStringExtra(EXTRA_MEMORY_MONITOR_PACKAGE);
+                String packageName = intent.getStringExtra(EXTRA_MEMORY_MONITOR_PACKAGE);
                 showWindow(getApplicationContext());
+                startMonitor(packageName);
                 return START_STICKY;
             }
             case ACTION_STOP_MEMORY_MONITOR_FLOATING: {
@@ -94,6 +105,48 @@ public class AppMemoryService extends Service {
         }
         return super.onStartCommand(intent, flags, startId);
     }
+
+    IMemoryMonitorListener.Stub iMemoryMonitorListener = new IMemoryMonitorListener.Stub() {
+        @Override
+        public void process(MemoryData data) {
+            showAppMemory(data);
+        }
+    };
+
+    private void startMonitor(String packageName) {
+        try {
+            IMemoryMonitorBinder memoryMonitorBinder = AppMemoryManager.getMemoryMonitorBinder();
+            if (memoryMonitorBinder != null) {
+                memoryMonitorBinder.start(packageName, 3000);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startMemoryMonitorListener() {
+        try {
+            IMemoryMonitorBinder memoryMonitorBinder = AppMemoryManager.getMemoryMonitorBinder();
+            if (memoryMonitorBinder != null) {
+                memoryMonitorBinder.addListener(iMemoryMonitorListener);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void stopMemoryMonitorListener() {
+        try {
+            IMemoryMonitorBinder memoryMonitorBinder = AppMemoryManager.getMemoryMonitorBinder();
+            if (memoryMonitorBinder != null) {
+                memoryMonitorBinder.removeListener(iMemoryMonitorListener);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void showNotification(Context context) {
 
@@ -126,11 +179,6 @@ public class AppMemoryService extends Service {
     FloatWindow mFloatWindow;
     TextView mTextView;
 
-    int mPid;
-
-    String mPackageName;
-
-
     private void showWindow(Context context) {
         if (mFloatWindow == null) {
             mFloatWindow = new FloatWindow(context);
@@ -144,7 +192,6 @@ public class AppMemoryService extends Service {
 
         }
         mFloatWindow.show();
-        startSchedule();
     }
 
 
@@ -155,42 +202,22 @@ public class AppMemoryService extends Service {
         }
     }
 
-    private void startSchedule() {
-        stopSchedule();
-        SharedPrefUtil.getLong(SharedPrefUtil.KEY_DAEMON_APK_VERSION, 0);
-        sScheduledExecutorService = Executors.newScheduledThreadPool(1);
-        sScheduledExecutorService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                showAppMemory();
-            }
-        }, 0, 1000, TimeUnit.MILLISECONDS);
-    }
-
-    private void showAppMemory() {
+    private void showAppMemory(MemoryData memoryData) {
         if (mTextView == null) {
-            stopSchedule();
-            hideWindow();
-            return;
-        }
-
-        AppMemoryInfo appMemoryInfo = AppMemoryManager.getAppMemoryModel(this.mPid);
-        if (appMemoryInfo == null) {
-            stopSchedule();
-            hideWindow();
             return;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Java Heap: " + appMemoryInfo.mJavaHeapPssSize + "\n");
-        stringBuilder.append("Native Heap: " + appMemoryInfo.mNativeHeapPssSize + "\n");
-        stringBuilder.append("Code:" + appMemoryInfo.mCodePssSize + "\n");
-        stringBuilder.append("Stack: " + appMemoryInfo.mStackPssSize + "\n");
-        stringBuilder.append("Graphics: " + appMemoryInfo.mGraphicsPssSize + "\n");
-        stringBuilder.append("Private Other: " + appMemoryInfo.mPrivateOtherPssSize + "\n");
-        stringBuilder.append("System: " + appMemoryInfo.mSystemPssSize + "\n");
-        stringBuilder.append("TOTAL PSS: " + appMemoryInfo.mTotalPssSize + "\n");
-        stringBuilder.append("TOTAL SWAP PSS: " + appMemoryInfo.mTotalSwapPssSize + "\n");
+        stringBuilder.append("Package: " + memoryData.mPackageName);
+        stringBuilder.append("Java Heap: " + memoryData.mJavaHeapPssSize + "\n");
+        stringBuilder.append("Native Heap: " + memoryData.mNativeHeapPssSize + "\n");
+        stringBuilder.append("Code:" + memoryData.mCodePssSize + "\n");
+        stringBuilder.append("Stack: " + memoryData.mStackPssSize + "\n");
+        stringBuilder.append("Graphics: " + memoryData.mGraphicsPssSize + "\n");
+        stringBuilder.append("Private Other: " + memoryData.mPrivateOtherPssSize + "\n");
+        stringBuilder.append("System: " + memoryData.mSystemPssSize + "\n");
+        stringBuilder.append("TOTAL PSS: " + memoryData.mTotalPssSize + "\n");
+        stringBuilder.append("TOTAL SWAP PSS: " + memoryData.mTotalSwapPssSize + "\n");
 
         if (mTextView != null) {
             mTextView.post(() -> mTextView.setText(stringBuilder));
@@ -204,6 +231,9 @@ public class AppMemoryService extends Service {
     }
 
     public static void startAppMemoryMonitorFloating(Context context, int pid, String packageName) {
+        if (!FreezeUtil.isOverlayPermission(context)) {
+            FreezeUtil.allowSystemAlertWindow();
+        }
         Intent intent = new Intent(context, AppMemoryService.class);
         intent.setAction(ACTION_START_MEMORY_MONITOR_FLOATING);
         intent.putExtra(EXTRA_MEMORY_MONITOR_PID, pid);

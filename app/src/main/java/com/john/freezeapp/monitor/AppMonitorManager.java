@@ -148,9 +148,6 @@ public class AppMonitorManager {
 
     public static void startAppMonitor(Context context) {
         if (ClientBinderManager.isActive()) {
-            if (!FreezeUtil.isOverlayPermission(context)) {
-                FreezeUtil.allowSystemAlertWindow();
-            }
             if (isAppMonitor() && FreezeUtil.isOverlayPermission(context)) {
                 AppMonitorService.startAppMonitor(context);
             }

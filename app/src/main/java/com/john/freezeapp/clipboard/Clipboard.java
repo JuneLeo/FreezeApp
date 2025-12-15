@@ -137,9 +137,6 @@ public class Clipboard {
 
     public static void startClipboardFloating(Context context) {
         if (ClientBinderManager.isActive()) {
-            if (!FreezeUtil.isOverlayPermission(context)) {
-                FreezeUtil.allowSystemAlertWindow();
-            }
             if (isClipboardFloating() && FreezeUtil.isOverlayPermission(context)) {
                 ClipboardService.startClipboardFloating(context);
             }
