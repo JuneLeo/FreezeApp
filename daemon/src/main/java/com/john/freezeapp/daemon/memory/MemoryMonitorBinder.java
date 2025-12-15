@@ -41,6 +41,18 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
     }
 
     private void requestMemoryData(String packageName) {
+
+        if (iMemoryMonitorListeners.isEmpty()) {
+            try {
+                stop();
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+        DaemonLog.log("MemoryMonitorBinder requestMemoryData");
+
         CommonShellUtils.execCommand(String.format("dumpsys meminfo --package %s", packageName), false, new CommonShellUtils.ShellCommandResultCallback() {
             @Override
             public void callback(CommonShellUtils.ShellCommandResult commandResult) {
