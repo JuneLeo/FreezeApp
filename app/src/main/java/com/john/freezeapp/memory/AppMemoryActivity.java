@@ -2,6 +2,8 @@ package com.john.freezeapp.memory;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -41,6 +43,20 @@ public class AppMemoryActivity extends ToolbarActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_memory_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.close_monitor) {
+            AppMemoryService.stopAppMemoryMonitorFloating(getContext());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void requestRunningApp() {
         FreezeAppManager.requestRunningApp(this, new FreezeAppManager.RunningCallback() {

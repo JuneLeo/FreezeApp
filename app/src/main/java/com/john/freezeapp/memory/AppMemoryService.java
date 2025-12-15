@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.john.freezeapp.BaseService;
 import com.john.freezeapp.R;
 import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.clipboard.ClipboardActivity;
@@ -37,7 +38,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class AppMemoryService extends Service {
+public class AppMemoryService extends BaseService {
     private static final String ACTION_START_MEMORY_MONITOR_FLOATING = "action_start_memory_monitor_floating";
     private static final String ACTION_STOP_MEMORY_MONITOR_FLOATING = "action_stop_memory_monitor_floating";
     private static final String ACTION_RESTART_MEMORY_MONITOR_FLOATING = "action_restart_memory_monitor_floating";
@@ -59,6 +60,12 @@ public class AppMemoryService extends Service {
         startMemoryMonitorListener();
     }
 
+
+    @Override
+    protected void unbindDaemon() {
+        super.unbindDaemon();
+        stopSelf();
+    }
 
     @TargetApi(Build.VERSION_CODES.O)
     private void createNotificationChannel(Context context) {
@@ -98,7 +105,6 @@ public class AppMemoryService extends Service {
                 return START_STICKY;
             }
             case ACTION_STOP_MEMORY_MONITOR_FLOATING: {
-                hideWindow();
                 stopSelf();
                 return START_NOT_STICKY;
             }
@@ -208,7 +214,7 @@ public class AppMemoryService extends Service {
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Package: " + memoryData.mPackageName);
+        stringBuilder.append("Package: " + memoryData.mPackageName + "\n");
         stringBuilder.append("Java Heap: " + memoryData.mJavaHeapPssSize + "\n");
         stringBuilder.append("Native Heap: " + memoryData.mNativeHeapPssSize + "\n");
         stringBuilder.append("Code:" + memoryData.mCodePssSize + "\n");

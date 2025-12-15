@@ -20,24 +20,20 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
 
     @Override
     public void execute(String query, String url, String model, String apiKey) throws RemoteException {
-        if (executorService != null) {
-            executorService.shutdownNow();
-        }
+        stop();
 
         executorService = Executors.newSingleThreadExecutor();
 
-        executorService.execute(new Runnable() {
-            @Override
-            public void run() {
-                isActive = true;
-                try {
-                    innerExecute(query, url, model, apiKey);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                isActive = false;
+        executorService.execute(() -> {
+            isActive = true;
+            try {
+                innerExecute(query, url, model, apiKey);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            isActive = false;
         });
+        DaemonLog.toClient("AutoGLMBinder start");
     }
 
     @Override
@@ -50,6 +46,7 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
         if (this.executorService != null) {
             this.executorService.shutdownNow();
             this.isActive = false;
+            DaemonLog.toClient("AutoGLMBinder stop");
         }
     }
 
@@ -57,13 +54,18 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
     public void addListener(IAutoGLMListener listener) throws RemoteException {
         synchronized (listener) {
             iAutoGLMListeners.add(listener);
-            listener.asBinder().linkToDeath(() -> iAutoGLMListeners.remove(listener), 0);
+            listener.asBinder().linkToDeath(() -> {
+                iAutoGLMListeners.remove(listener);
+                DaemonLog.toClient("AutoGLMBinder listener death length=" + iAutoGLMListeners.size());
+            }, 0);
+            DaemonLog.toClient("AutoGLMBinder add listener length=" + iAutoGLMListeners.size());
         }
     }
 
     @Override
     public void removeListener(IAutoGLMListener listener) throws RemoteException {
         iAutoGLMListeners.remove(listener);
+        DaemonLog.toClient("AutoGLMBinder remove listener length=" + iAutoGLMListeners.size());
     }
 
     private void innerExecute(String query, String url, String model, String apiKey) {

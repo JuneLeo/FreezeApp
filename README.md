@@ -14,4 +14,5 @@
 * APP外屏配置（小米 MIX FLIP）
 * APP文件服务器(支持根目录和App内置沙盒目录)
 * APP流量监控（Daemon进程监控移动数据流量超出设置的阈值）
+* APP内存监控（Daemon进程通过 dumpsys meminfo --package 读取内存信息）
 * APP AutoGLM  将[Open-AutoGLM](https://github.com/zai-org/Open-AutoGLM) 翻译为了Java代码并进行了集成。

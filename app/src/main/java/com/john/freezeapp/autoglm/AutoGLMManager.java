@@ -3,6 +3,7 @@ package com.john.freezeapp.autoglm;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.john.freezeapp.IDaemonBinder;
 import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.daemon.DaemonHelper;
 import com.john.freezeapp.daemon.autoglm.IAutoGLMBinder;
@@ -11,9 +12,12 @@ import com.john.freezeapp.util.SharedPrefUtil;
 public class AutoGLMManager {
     public static IAutoGLMBinder getAutoGLMBinder() {
         try {
-            IBinder service = ClientBinderManager.getDaemonBinder().getService(DaemonHelper.DAEMON_BINDER_AUTO_GLM);
-            if (service != null) {
-                return IAutoGLMBinder.Stub.asInterface(service);
+            IDaemonBinder daemonBinder = ClientBinderManager.getDaemonBinder();
+            if (daemonBinder != null) {
+                IBinder service = daemonBinder.getService(DaemonHelper.DAEMON_BINDER_AUTO_GLM);
+                if (service != null) {
+                    return IAutoGLMBinder.Stub.asInterface(service);
+                }
             }
         } catch (RemoteException e) {
             e.printStackTrace();

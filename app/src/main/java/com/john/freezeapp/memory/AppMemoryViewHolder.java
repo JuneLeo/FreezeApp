@@ -21,7 +21,7 @@ public class AppMemoryViewHolder extends CardViewHolder<AppMemoryModel> {
     public static Creator<AppMemoryModel> CREATOR = new Creator<AppMemoryModel>() {
         @Override
         public AppMemoryViewHolder createViewHolder(LayoutInflater inflater, ViewGroup parent) {
-            return new AppMemoryViewHolder(inflater.inflate(R.layout.item_app_ops, parent, false));
+            return new AppMemoryViewHolder(inflater.inflate(R.layout.item_app_memory, parent, false));
         }
     };
 

@@ -3,7 +3,9 @@ package com.john.freezeapp.daemon.memory;
 import android.os.RemoteException;
 import android.text.TextUtils;
 
+import com.john.freezeapp.IClientLogBinder;
 import com.john.freezeapp.daemon.CommonShellUtils;
+import com.john.freezeapp.daemon.DaemonLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
         stop();
         executorService = Executors.newScheduledThreadPool(1);
         executorService.scheduleWithFixedDelay(() -> requestMemoryData(packageName), 0, delay, TimeUnit.MILLISECONDS);
+        DaemonLog.toClient("MemoryMonitorBinder Task start");
         return false;
     }
 
@@ -76,7 +79,11 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
     public void addListener(IMemoryMonitorListener listener) throws RemoteException {
         synchronized (iMemoryMonitorListeners) {
             iMemoryMonitorListeners.add(listener);
-            listener.asBinder().linkToDeath(() -> iMemoryMonitorListeners.remove(listener), 0);
+            listener.asBinder().linkToDeath(() -> {
+                iMemoryMonitorListeners.remove(listener);
+                DaemonLog.toClient("MemoryMonitorBinder listener death length=" + iMemoryMonitorListeners.size());
+            }, 0);
+            DaemonLog.toClient("MemoryMonitorBinder add listener length=" + iMemoryMonitorListeners.size());
         }
     }
 
@@ -84,6 +91,7 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
     public void removeListener(IMemoryMonitorListener listener) throws RemoteException {
         synchronized (iMemoryMonitorListeners) {
             iMemoryMonitorListeners.remove(listener);
+            DaemonLog.toClient("MemoryMonitorBinder remove listener length=" + iMemoryMonitorListeners.size());
         }
     }
 
@@ -98,6 +106,7 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
         if (this.executorService != null) {
             this.executorService.shutdownNow();
             this.isActive = false;
+            DaemonLog.toClient("MemoryMonitorBinder Task stop");
         }
     }
 }

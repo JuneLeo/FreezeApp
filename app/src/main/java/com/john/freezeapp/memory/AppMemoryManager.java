@@ -5,6 +5,7 @@ import android.os.DebugHidden;
 import android.os.IBinder;
 import android.os.RemoteException;
 
+import com.john.freezeapp.IDaemonBinder;
 import com.john.freezeapp.client.ClientBinderManager;
 import com.john.freezeapp.client.ClientSystemService;
 import com.john.freezeapp.daemon.DaemonHelper;
@@ -361,9 +362,12 @@ public class AppMemoryManager {
 
     public static IMemoryMonitorBinder getMemoryMonitorBinder() {
         try {
-            IBinder service = ClientBinderManager.getDaemonBinder().getService(DaemonHelper.DAEMON_BINDER_MEMORY_MONITOR);
-            if (service != null) {
-                return IMemoryMonitorBinder.Stub.asInterface(service);
+            IDaemonBinder daemonBinder = ClientBinderManager.getDaemonBinder();
+            if (daemonBinder != null) {
+                IBinder service = daemonBinder.getService(DaemonHelper.DAEMON_BINDER_MEMORY_MONITOR);
+                if (service != null) {
+                    return IMemoryMonitorBinder.Stub.asInterface(service);
+                }
             }
         } catch (RemoteException e) {
             e.printStackTrace();
