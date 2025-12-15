@@ -8,6 +8,7 @@ import com.john.freezeapp.daemon.CommonShellUtils;
 import com.john.freezeapp.daemon.DaemonLog;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -80,7 +81,11 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
         synchronized (iMemoryMonitorListeners) {
             iMemoryMonitorListeners.add(listener);
             listener.asBinder().linkToDeath(() -> {
-                iMemoryMonitorListeners.remove(listener);
+                try {
+                    removeListener(listener);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 DaemonLog.toClient("MemoryMonitorBinder listener death length=" + iMemoryMonitorListeners.size());
             }, 0);
             DaemonLog.toClient("MemoryMonitorBinder add listener length=" + iMemoryMonitorListeners.size());
@@ -90,7 +95,7 @@ public class MemoryMonitorBinder extends IMemoryMonitorBinder.Stub {
     @Override
     public void removeListener(IMemoryMonitorListener listener) throws RemoteException {
         synchronized (iMemoryMonitorListeners) {
-            iMemoryMonitorListeners.remove(listener);
+            iMemoryMonitorListeners.removeIf(next -> next.asBinder() == listener.asBinder());
             DaemonLog.toClient("MemoryMonitorBinder remove listener length=" + iMemoryMonitorListeners.size());
         }
     }

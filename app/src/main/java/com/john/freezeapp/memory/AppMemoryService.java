@@ -84,6 +84,18 @@ public class AppMemoryService extends BaseService {
         super.onDestroy();
         hideWindow();
         stopMemoryMonitorListener();
+        stopTask();
+    }
+
+    private void stopTask() {
+        try {
+            IMemoryMonitorBinder memoryMonitorBinder = AppMemoryManager.getMemoryMonitorBinder();
+            if (memoryMonitorBinder != null) {
+                memoryMonitorBinder.stop();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
 

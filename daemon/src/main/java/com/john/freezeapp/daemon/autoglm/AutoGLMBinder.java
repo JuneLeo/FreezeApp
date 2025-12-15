@@ -52,10 +52,14 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
 
     @Override
     public void addListener(IAutoGLMListener listener) throws RemoteException {
-        synchronized (listener) {
+        synchronized (iAutoGLMListeners) {
             iAutoGLMListeners.add(listener);
             listener.asBinder().linkToDeath(() -> {
-                iAutoGLMListeners.remove(listener);
+                try {
+                    removeListener(listener);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
                 DaemonLog.toClient("AutoGLMBinder listener death length=" + iAutoGLMListeners.size());
             }, 0);
             DaemonLog.toClient("AutoGLMBinder add listener length=" + iAutoGLMListeners.size());
@@ -64,8 +68,10 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
 
     @Override
     public void removeListener(IAutoGLMListener listener) throws RemoteException {
-        iAutoGLMListeners.remove(listener);
-        DaemonLog.toClient("AutoGLMBinder remove listener length=" + iAutoGLMListeners.size());
+        synchronized (iAutoGLMListeners) {
+            iAutoGLMListeners.removeIf(next -> next.asBinder() == listener.asBinder());
+            DaemonLog.toClient("AutoGLMBinder remove listener length=" + iAutoGLMListeners.size());
+        }
     }
 
     private void innerExecute(String query, String url, String model, String apiKey) {
@@ -115,31 +121,37 @@ public class AutoGLMBinder extends IAutoGLMBinder.Stub {
 
 
     private void notifyStart() {
-        for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
-            try {
-                iAutoGLMListener.start();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        synchronized (iAutoGLMListeners) {
+            for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
+                try {
+                    iAutoGLMListener.start();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private void notifyEnd() {
-        for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
-            try {
-                iAutoGLMListener.end();
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        synchronized (iAutoGLMListeners) {
+            for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
+                try {
+                    iAutoGLMListener.end();
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
 
     private void notifyAction(String action) {
-        for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
-            try {
-                iAutoGLMListener.process(action);
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        synchronized (iAutoGLMListeners) {
+            for (IAutoGLMListener iAutoGLMListener : iAutoGLMListeners) {
+                try {
+                    iAutoGLMListener.process(action);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
