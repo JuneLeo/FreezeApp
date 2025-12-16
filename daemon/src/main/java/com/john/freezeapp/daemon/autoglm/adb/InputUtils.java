@@ -27,7 +27,7 @@ public class InputUtils {
         // Use am broadcast directly (no ADB needed)
         Process process = Runtime.getRuntime().exec(new String[]{
             "am", "broadcast",
-            "-a", "ADB_INPUT_B64",
+            "-a", "FREEZE_APP_ADB_INPUT_B64",
             "--es", "msg", encodedText
         });
         process.waitFor();
@@ -40,7 +40,7 @@ public class InputUtils {
     public static void clearText(String deviceId) throws Exception {
         // Use am broadcast directly (no ADB needed)
         Process process = Runtime.getRuntime().exec(new String[]{
-            "am", "broadcast", "-a", "ADB_CLEAR_TEXT"
+            "am", "broadcast", "-a", "FREEZE_APP_ADB_CLEAR_TEXT"
         });
         process.waitFor();
     }
@@ -70,10 +70,10 @@ public class InputUtils {
         }
         
         // Switch to ADB Keyboard if not already set
-        if (!currentIme.contains("com.android.adbkeyboard/.AdbIME")) {
+        if (!currentIme.contains("com.john.freezeapp/.ime.AdbIME") ) {
             // Use ime set directly (no ADB needed)
             Process setProcess = Runtime.getRuntime().exec(new String[]{
-                "ime", "set", "com.android.adbkeyboard/.AdbIME"
+                "ime", "set", "com.john.freezeapp/.ime.AdbIME"
             });
             setProcess.waitFor();
         }

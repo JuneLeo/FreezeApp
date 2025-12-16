@@ -293,4 +293,7 @@
 
     <string name="file_server_tip">App内部沙盒FS启动后，需要App在前台才能访问～</string>
 
+    <string name="keyboard_name">FreezeApp ADB Keyboard</string>
+    <string name="keyboard_on">FreezeApp ADB Keyboard {ON}</string>
+
 </resources>
