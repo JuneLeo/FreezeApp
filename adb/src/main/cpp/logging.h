@@ -1,7 +1,7 @@
 #ifndef _LOGGING_H
 #define _LOGGING_H
 
-#include "../../../../../../.gradle/caches/transforms-3/ed50999c7b92649ad7b7604b1c8611db/transformed/cxx-1.2.0/prefab/modules/cxx/include/errno.h"
+#include "errno.h"
 #include "android/log.h"
 
 #ifndef LOG_TAG
