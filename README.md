@@ -47,7 +47,7 @@
 利用 dumpsys meminfo --package 命令定期采集内存占用数据，分析内存泄漏风险，辅助性能调优。
 * APP AutoGLM
 
-将开源项目 Open-AutoGLM 的核心逻辑从 Kotlin 重写为 Java，并深度集成进 FreezeApp。
+将开源项目 Open-AutoGLM 的核心逻辑从 Python 重写为 Java，并深度集成进 FreezeApp。
 
 ## 使用
 * 首次打开app，会显示“Freeze服务未启动”，支持多种启动方式。
