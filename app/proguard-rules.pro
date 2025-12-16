@@ -35,3 +35,8 @@
 -keepattributes AnnotationDefault,RuntimeVisibleAnnotations
 -keep class com.google.gson.reflect.TypeToken { <fields>; }
 -keepclassmembers class **$TypeAdapterFactory { <fields>; }
+
+# Ignore missing JNDI classes used by BouncyCastle's LDAP/CRL features (not available on Android)
+-dontwarn javax.naming.**
+-dontwarn org.bouncycastle.jce.provider.X509LDAPCertStoreSpi
+-dontwarn org.bouncycastle.jce.provider.CrlCache
