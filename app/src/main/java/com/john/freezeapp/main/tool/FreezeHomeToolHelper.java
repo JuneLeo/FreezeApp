@@ -197,7 +197,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
                 context.getResources().getString(R.string.main_clipboard_name),
                 context.getResources().getString(R.string.main_clipboard_short_title),
-                R.drawable.ic_vector_storage,
+                R.drawable.ic_vector_clipboard,
                 0xffBC9DEB,
                 v -> {
                     Intent intent = new Intent(context, ClipboardActivity.class);
@@ -209,7 +209,7 @@ public class FreezeHomeToolHelper {
             list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_POWER_SAVE,
                     context.getResources().getString(R.string.main_app_standby_bucket),
                     context.getResources().getString(R.string.main_app_standby_bucket_short_title),
-                    R.drawable.ic_vector_white_terminal,
+                    R.drawable.ic_vector_android,
                     0xff9986A4,
                     v -> {
                         Intent intent = new Intent(context, AppStandbyActivity.class);
@@ -222,7 +222,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_POWER_SAVE,
                 context.getResources().getString(R.string.main_app_device_idle),
                 context.getResources().getString(R.string.main_app_device_idle_short_title),
-                R.drawable.ic_vector_white_terminal,
+                R.drawable.ic_vector_android,
                 0xff9986A4,
                 v -> {
                     Intent intent = new Intent(context, DeviceIdleActivity.class);
@@ -245,7 +245,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
                 context.getResources().getString(R.string.main_command_app),
                 context.getResources().getString(R.string.main_command_app),
-                R.drawable.ic_vector_white_terminal,
+                R.drawable.ic_vector_adb,
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, CommandActivity.class);
@@ -256,7 +256,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
                 context.getResources().getString(R.string.main_app_traffic_monitor),
                 context.getResources().getString(R.string.main_app_traffic_monitor_short_title),
-                R.drawable.ic_vector_white_terminal,
+                R.drawable.ic_vector_flow,
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, TrafficMonitorActivity.class);
@@ -268,7 +268,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
                 context.getResources().getString(R.string.main_app_memory_monitor),
                 context.getResources().getString(R.string.main_app_memory_monitor_short_title),
-                R.drawable.ic_vector_white_terminal,
+                R.drawable.ic_vector_memory,
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, AppMemoryActivity.class);
@@ -280,7 +280,7 @@ public class FreezeHomeToolHelper {
         list.add(new FreezeHomeToolModel(FreezeHomeToolModel.GROUP_TOOL,
                 context.getResources().getString(R.string.main_app_auto_glm),
                 context.getResources().getString(R.string.main_app_auto_glm_short_title),
-                R.drawable.ic_vector_white_terminal,
+                R.drawable.ic_vector_acc,
                 0xffF4E1B9,
                 v -> {
                     Intent intent = new Intent(context, AutoGLMActivity.class);
