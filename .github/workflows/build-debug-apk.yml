@@ -1,35 +1,70 @@
-name: Build Debug APK with Java 17
+name: Build & Release Debug APK
 
+# 仅在推送 tag 时触发
 on:
   push:
     tags:
-      - 'v*'        # 匹配 v1.0, v2.1 等
-      - 'debug-*'   # 匹配 debug-v1, debug-build 等自定义标签
+      - 'v*'         # 如 v1.0, v2.1
+      - 'debug-*'    # 如 debug-v1
+      - 'alpha-*'
+      - 'beta-*'
+# 👇 添加这一段！关键！
+permissions:
+  contents: write
+  packages: read
 
 jobs:
-  build:
-    name: Build Debug APK
+  build-release:
+    name: Build Debug APK and Publish
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin'  # Eclipse Temurin JDK
+          distribution: 'temurin'
           cache: gradle
 
-      - name: Make Gradle Wrapper Executable
+      - name: Make Gradle Executable
         run: chmod +x gradlew
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Upload Debug APK as Artifact
-        uses: actions/upload-artifact@v4
+      - name: Extract Version Name
+        id: version
+        run: |
+          # 从 build.gradle 提取 versionName
+          VERSION_NAME=$(grep "versionName" app/build.gradle | head -1 | awk '{print $2}' | tr -d "'\"")
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create Release and Upload APK
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: app-debug.apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          tag_name: ${{ github.ref }}
+          name: 🐞 Debug Release - ${{ github.ref_name }}${{ steps.version.outputs.version_name && format(' (v{0})', steps.version.outputs.version_name) }}
+          body: |
+            ### 🔧 Auto-Built Debug APK
+            
+            This is a debug build generated automatically upon tagging.
+            
+            - **Tag**: `${{ github.ref_name }}`
+            - **Commit**: ${{ github.sha }}
+            - **Built with**: OpenJDK 17 ✅
+            - **Gradle**: 8.5
+            - **Android Plugin**: 8.3.0
+            
+            ⚠️ Not for production use — contains debug symbols and is signed with default debug key.
+            
+            Use it for testing, QA, or internal distribution.
+          draft: false
+          prerelease: true
+          generate_release_notes: false
+          files: app/build/outputs/apk/debug/app-debug.apk
